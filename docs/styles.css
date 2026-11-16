@@ -1171,3 +1171,31 @@ main::after{right:var(--rail-x)}
 #library .library-tab.is-active strong{color:var(--accent)}
 #library .library-tab:focus-visible{outline-color:rgba(59,111,210,.35)}
 #library .library-tab-panel{background:rgba(255,255,255,.82)}
+
+/* Reader refinements: calm header, softer instruction heading, compact sans-serif text. */
+#reader .reader-head{
+  background:#fff;
+}
+#reader .reader-copy .section-title{
+  color:#66738a;
+  font-weight:450;
+  letter-spacing:-.025em;
+}
+#reader #reader-text p{
+  font-family:var(--font-display);
+  font-size:var(--reader-font-size,18px)!important;
+  line-height:1.62;
+  letter-spacing:0;
+  margin-bottom:.55em;
+  font-optical-sizing:auto;
+}
+@media(max-width:700px){
+  #reader #reader-text p{line-height:1.62}
+}
+
+/* The secondary color now drives more of the site's small accents and section details. */
+:root{
+  --deco:var(--second);
+  --deco-deep:var(--second-deep);
+  --deco-tint:var(--second-tint);
+}
