@@ -534,22 +534,40 @@ function wbwReadSelection(){
   const range=selection.getRangeAt(0).cloneRange();
   return {text:value,range};
 }
-function wbwSetTranslationContext(node,phrase){
+function wbwSetTranslationContext(node,phrase,selectionRange){
   const context=document.getElementById("translation-context"),output=context?.querySelector("p");
-  if(!context||!output)return;
+  if(!context||!output)return "";
   const element=node instanceof Element?node:node?.parentElement;
   const paragraph=element?.closest("#reader-text p,#reader-title");
-  const source=paragraph?.textContent?.replace(/\s+/g," ").trim()||"";
-  if(!source){context.hidden=true;output.textContent="";return}
-  const normalized=source.toLocaleLowerCase(),needle=String(phrase||"").replace(/\s+/g," ").trim().toLocaleLowerCase();
-  const index=needle?normalized.indexOf(needle):-1;
-  let start=index>=0?index:0,end=index>=0?index+needle.length:source.length;
+  const source=paragraph?.textContent||"";
+  if(!source){context.hidden=true;output.textContent="";return ""}
+  let start=0,end=source.length;
+  let targetRange=selectionRange?.cloneRange()||null;
+  if(!targetRange&&element&&paragraph.contains(element)){
+    targetRange=document.createRange();
+    targetRange.selectNodeContents(element);
+  }
+  if(targetRange&&paragraph.contains(targetRange.startContainer)&&paragraph.contains(targetRange.endContainer)){
+    const before=document.createRange();
+    before.selectNodeContents(paragraph);
+    before.setEnd(targetRange.startContainer,targetRange.startOffset);
+    start=before.toString().length;
+    const through=document.createRange();
+    through.selectNodeContents(paragraph);
+    through.setEnd(targetRange.endContainer,targetRange.endOffset);
+    end=through.toString().length;
+  }else{
+    const needle=String(phrase||"").replace(/\s+/g," ").trim();
+    end=Math.min(source.length,needle.length);
+  }
   const leftStops=[...source.slice(0,start).matchAll(/[.!?;:]/g)],rightStop=source.slice(end).search(/[.!?;:]/);
   if(leftStops.length)start=leftStops[leftStops.length-1].index+1;
   if(rightStop>=0)end+=rightStop+1;
-  let sentence=source.slice(start,end).trim();
+  let sentence=source.slice(start,end).replace(/\s+/g," ").trim();
   if(sentence.length>220)sentence=sentence.slice(0,217).trimEnd()+"…";
-  output.textContent=sentence;context.hidden=!sentence;
+  output.textContent=sentence;
+  context.hidden=!sentence;
+  return sentence;
 }
 function wbwTranslationChunks(value){
   const encoder=new TextEncoder(),chunks=[];let chunk="",size=0;
@@ -588,12 +606,18 @@ async function wbwTranslateSelection(selected){
   const anchor={getBoundingClientRect(){const rects=Array.from(selected.range.getClientRects()).filter(r=>r.width&&r.height);return rects[rects.length-1]||selected.range.getBoundingClientRect()}};
   activeAnchor=anchor;card.dataset.selection="true";card.dataset.word=selected.text;
   document.getElementById("translation-word").textContent=selected.text;
-  wbwSetTranslationContext(selected.range.startContainer,selected.text);
+  wbwSetTranslationContext(selected.range.startContainer,selected.text,selected.range);
   const output=document.getElementById("translation-value");
   output.textContent=selected.text.length>2000?"Виділіть коротший уривок — до 2000 символів.":"Перекладаємо…";
   card.hidden=false;positionCard(anchor);
   if(selected.text.length>2000)return;
-  try{const value=await wbwFetchPhrase(selected.text);if(own!==requestId)return;output.textContent=value;positionCard(anchor)}
+  try{
+    const exactPhrase=String(selected.text).toLocaleLowerCase().replace(/\\s+/g," ").trim().replace(/[.!?]+$/,"");
+    const knownPhrase=contextualPhrases[exactPhrase];
+    const value=knownPhrase||await wbwFetchPhrase(selected.text);
+    if(own!==requestId)return;
+    output.textContent=value;positionCard(anchor)
+  }
   catch{if(own===requestId){output.textContent="Переклад тимчасово недоступний. Спробуйте ще раз.";positionCard(anchor)}}
 }
 let wbwSelectionTimer,wbwDragging=false;
