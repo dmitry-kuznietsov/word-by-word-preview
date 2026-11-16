@@ -1043,14 +1043,16 @@ main::after{right:var(--rail-x)}
 }
 
 
-/* Reader typography refinement — keep the original cool blue palette. */
+/* Editorial surfaces, now using the original cool blue palette. */
+body{background:var(--bg)}
+.plate{background:#FFFFFF;border-color:var(--line-2);box-shadow:0 30px 60px -48px rgba(11,18,32,.18)}
+.translation #translation-word{color:var(--ink)}
+.translation #translation-value{border-color:#D7E4FA;border-left-color:var(--accent);background:#F0F5FE;color:#17366F}
+
+/* Reader typography refinement — retain sans-serif reading without changing the site palette. */
 #reader .reader-card{overflow:hidden;border-radius:22px}
 #reader .chapter{font-family:var(--font-display)}
-#reader #reader-title{
-  font-family:var(--font-display);
-  font-weight:600;
-  letter-spacing:-.035em;
-}
+#reader #reader-title{font-family:var(--font-display);font-weight:600;letter-spacing:-.035em}
 #reader #reader-text,
 #reader #reader-text p{
   font-family:var(--font-display)!important;
@@ -1058,10 +1060,5 @@ main::after{right:var(--rail-x)}
   letter-spacing:-.012em;
   line-height:1.72;
 }
-#reader #reader-text p{
-  margin-bottom:.82em;
-  font-size:var(--reader-font-size,18px)!important;
-}
-@media(max-width:700px){
-  #reader #reader-text p{line-height:1.65}
-}
+#reader #reader-text p{margin-bottom:.82em;font-size:var(--reader-font-size,18px)!important}
+@media(max-width:700px){#reader #reader-text p{line-height:1.65}}
