@@ -1644,3 +1644,8 @@ body{background:var(--bg)}
 @media(prefers-reduced-motion:reduce){
   #library .library-tab{transition:none}
 }
+
+
+/* Modern Editorial — tighter rhythm in the interactive hero sample. */
+.plate-text{line-height:1.55}
+@media(max-width:560px){.plate-text{line-height:1.55}}
