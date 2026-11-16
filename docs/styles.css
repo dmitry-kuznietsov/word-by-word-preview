@@ -1886,3 +1886,106 @@ body{background:var(--bg)}
 @media(max-width:390px){
   #reader #reader-text p{line-height:1.72}
 }
+
+
+/* Modern Editorial — compact reader toolbar with a clear control hierarchy. */
+#reader .reader-head{
+  min-height:60px;
+  padding:11px clamp(18px,3vw,34px);
+  gap:14px;
+  background:#F8F8F2;
+}
+#reader .reader-meta{
+  gap:9px;
+  min-width:0;
+  font-size:13px;
+}
+#reader .reader-meta b{
+  min-width:38px;
+  padding:5px 10px;
+  border-radius:9px;
+  font-size:12px;
+  text-align:center;
+}
+#reader .reader-meta span:last-child{
+  overflow:hidden;
+  color:#697268;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#reader .reader-tools{
+  gap:12px;
+}
+#reader .reader-settings{
+  gap:6px;
+}
+#reader .reader-font-controls{
+  min-height:38px;
+  gap:3px;
+  padding:3px;
+  border:1px solid #E2E5DA;
+  border-radius:11px;
+  background:#FFFEFB;
+  box-shadow:0 1px 2px rgba(38,48,37,.035);
+}
+#reader .reader-font-controls button{
+  min-width:32px;
+  height:30px;
+  padding:0 7px;
+  border-radius:8px;
+  color:#536D55;
+  font-size:14px;
+}
+#reader .reader-font-controls output{
+  min-width:43px;
+  color:#687368;
+  font-size:11px;
+}
+#reader .reader-time{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:32px;
+  padding:0 10px;
+  border:1px solid #E5E7DE;
+  border-radius:9px;
+  background:#FDFDF9;
+  color:#788074;
+  font-size:12px;
+  white-space:nowrap;
+}
+#reader .reader-font-controls button:focus-visible{
+  outline:2px solid #8BA187;
+  outline-offset:2px;
+}
+@media(max-width:700px){
+  #reader .reader-head{
+    align-items:center;
+    padding:10px 14px;
+    gap:9px;
+  }
+  #reader .reader-meta{gap:7px}
+  #reader .reader-meta b{min-width:35px;padding:5px 8px}
+  #reader .reader-tools{
+    width:auto;
+    flex:0 0 auto;
+    gap:7px;
+  }
+  #reader .reader-font-controls{min-height:36px}
+  #reader .reader-font-controls button{min-width:29px;height:28px}
+  #reader .reader-font-controls output{min-width:38px}
+  #reader .reader-time{min-height:30px;padding:0 8px;font-size:11px}
+}
+@media(max-width:420px){
+  #reader .reader-head{flex-wrap:wrap}
+  #reader .reader-meta{flex:1 1 auto}
+  #reader .reader-tools{
+    width:100%;
+    justify-content:space-between;
+  }
+  #reader .reader-settings{margin-left:auto}
+  #reader .reader-time{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+  #reader .reader-font-controls button{transition:none}
+}
