@@ -112,10 +112,17 @@
         <article class="reader-card" aria-label="Текст для читання">
           <div class="reader-bar" aria-hidden="true"><i></i></div>
           <div class="reader-head"><span class="reader-meta"><b id="reader-level">A1</b><span id="reader-genre">Повсякденність</span></span><div class="reader-tools">
-            <div class="reader-font-controls" role="group" aria-label="Розмір шрифту">
-              <button type="button" id="reader-font-decrease" aria-label="Зменшити шрифт" title="Зменшити шрифт">A−</button>
-              <output id="reader-font-size" aria-live="polite">18 px</output>
-              <button type="button" id="reader-font-increase" aria-label="Збільшити шрифт" title="Збільшити шрифт">A+</button>
+            <div class="reader-settings" aria-label="Налаштування читання">
+              <div class="reader-font-controls" role="group" aria-label="Розмір шрифту">
+                <button type="button" id="reader-font-decrease" aria-label="Зменшити шрифт" title="Зменшити шрифт">A−</button>
+                <output id="reader-font-size" aria-live="polite">18 px</output>
+                <button type="button" id="reader-font-increase" aria-label="Збільшити шрифт" title="Збільшити шрифт">A+</button>
+              </div>
+              <div class="reader-width-controls" role="group" aria-label="Ширина тексту">
+                <button type="button" data-reader-width="narrow" aria-pressed="false" title="Вузький текст">Вузько</button>
+                <button type="button" data-reader-width="normal" aria-pressed="true" title="Звичайна ширина">Звично</button>
+                <button type="button" data-reader-width="wide" aria-pressed="false" title="Широкий текст">Широко</button>
+              </div>
             </div>
             <span class="reader-time" id="reader-time">4 хв</span>
           </div></div>
@@ -126,7 +133,7 @@
           </div>
           <div class="reader-foot">
             <button class="reader-nav" id="reader-prev" type="button" aria-label="Попередня частина" hidden disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
-            <span class="reader-foot-copy"><span id="reader-guide">Клік — слово · виділення — фраза, подвійний клік — закрити</span><span id="reader-page" hidden></span></span>
+            <span class="reader-foot-copy"><span id="reader-guide">Клік — слово · виділення — фраза, подвійний клік — закрити</span><span id="reader-page" hidden></span><select id="reader-jump" class="reader-jump" aria-label="Перейти до частини або оповідання" hidden></select></span>
             <button class="reader-nav" id="reader-next" type="button" aria-label="Наступна частина" hidden disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
           </div>
         </article>
