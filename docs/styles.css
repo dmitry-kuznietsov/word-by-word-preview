@@ -961,3 +961,17 @@ main::after{right:var(--rail-x)}
 /* Word lemma hint in the translation card. */
 .translation .translation-lemma{display:block;margin:-9px 0 14px;color:var(--muted);font:500 13px/1.4 var(--font-display)}
 .translation .translation-lemma[hidden]{display:none}
+
+
+/* Translation card: no decorative pointer and no inner scrolling. */
+.translation::before,
+.translation[data-placement="above"]::before{
+  display:none;
+}
+.translation,
+.translation[data-selection]{
+  max-height:none;
+  overflow:visible;
+  overscroll-behavior:auto;
+  scrollbar-gutter:auto;
+}
