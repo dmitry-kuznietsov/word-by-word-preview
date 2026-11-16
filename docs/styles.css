@@ -908,3 +908,34 @@ main::after{right:var(--rail-x)}
 .translation .translation-context{margin-top:14px;padding-top:11px;border-top:1px solid var(--line-2)}
 .translation .translation-context small{display:block;margin-bottom:4px;color:var(--muted);font:500 11px/1.4 var(--font-display);letter-spacing:.055em;text-transform:uppercase}
 .translation .translation-context p{margin:0;color:var(--muted);font:italic 14px/1.5 var(--font-read);overflow-wrap:anywhere}
+
+
+/* Translation card: make the Ukrainian meaning the clearest, primary element. */
+.translation #translation-word{
+  margin:8px 30px 17px 0;
+  color:#53627A;
+  font-weight:500;
+  font-size:clamp(17px,1.7vw,20px);
+  line-height:1.4;
+}
+.translation .translation-result-label{
+  margin:0 0 8px;
+  color:var(--accent-deep);
+  font-weight:700;
+  letter-spacing:.065em;
+}
+.translation #translation-value{
+  padding:13px 15px;
+  border:1px solid #D7E4FA;
+  border-left:3px solid var(--accent);
+  border-radius:10px;
+  background:#F0F5FE;
+  color:#17366F;
+  font-size:clamp(20px,2vw,23px);
+  font-weight:650;
+  line-height:1.45;
+}
+.translation .translation-context{
+  margin-top:13px;
+  padding-top:11px;
+}
