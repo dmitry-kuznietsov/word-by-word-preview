@@ -1251,3 +1251,10 @@ main::after{right:var(--rail-x)}
   outline:3px solid rgba(59,111,210,.35);
   outline-offset:3px;
 }
+
+/* Keep A1–B2 level labels blue in every tab state. */
+#library .library-tab strong,
+#library .library-tab.is-active strong,
+#library .library-tab:hover strong{
+  color:var(--accent);
+}
