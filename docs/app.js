@@ -502,7 +502,58 @@ Promise.all([fetch("data/dictionary.json").then(response=>{if(!response.ok)throw
     let openLibraryLevel="A1";
     function addBook(container,s,i){const article=document.createElement("article"),excerpt=s.body.slice(0,2).join(" "),icon=(window.WBW_ICONS&&window.WBW_ICONS[i])||s.mark,arrow=window.WBW_ARROW||"→";article.className="book "+s.color;article.innerHTML=`<button type="button" aria-label="Відкрити ${s.title}"><span class="book-top"><span class="book-genre">${s.genre}</span><span class="book-level">${s.time}</span></span><span class="book-icon">${icon}</span><span class="book-bottom"><span class="book-title" lang="en">${s.title}</span><span class="book-note" lang="en">${excerpt}</span><span class="open"><span class="open-label">Відкрити оповідання ${arrow}</span></span></span></button>`;article.querySelector("button").onclick=()=>showStory(i);container.append(article)}
     const levelNames={A1:"Початковий",A2:"Базовий",B1:"Середній",B2:"Вище середнього"};
-    function renderBooks(){const compact=matchMedia("(max-width:900px)").matches;grid.innerHTML="";grid.classList.toggle("accordion-library",compact);["A1","A2","B1","B2"].forEach(level=>{const items=stories.map((story,index)=>({story,index})).filter(item=>item.story.level===level),head=`<b>${level}</b><span>${levelNames[level]}</span><small>${items.length} текстів</small>`;if(!compact){const group=document.createElement("section"),header=document.createElement("header"),books=document.createElement("div");group.className="level-group";group.setAttribute("aria-label","Рівень "+level);header.className="level-head";header.innerHTML=head;books.className="level-books";items.forEach(({story,index})=>addBook(books,story,index));group.append(header,books);grid.append(group);return}const details=document.createElement("details"),summary=document.createElement("summary"),books=document.createElement("div");details.className="library-level";details.open=level===openLibraryLevel;summary.innerHTML=head;books.className="level-books-flat";items.forEach(({story,index})=>addBook(books,story,index));details.append(summary,books);details.addEventListener("toggle",()=>{if(!details.open)return;openLibraryLevel=level;grid.querySelectorAll(".library-level[open]").forEach(item=>{if(item!==details)item.open=false})});grid.append(details)})}
+    const libraryLevels=["A1","A2","B1","B2"];
+    function renderBooks(){
+      const grid=document.getElementById("book-grid");
+      if(!grid)return;
+      const groups=libraryLevels.map(level=>({level,items:stories.map((story,index)=>({story,index})).filter(item=>item.story.level===level)}));
+      if(!groups.some(group=>group.level===openLibraryLevel))openLibraryLevel="A1";
+      grid.replaceChildren();
+      grid.className="book-grid library-tabs-layout";
+      const tabs=document.createElement("div");
+      tabs.className="library-tabs";
+      tabs.setAttribute("role","tablist");
+      tabs.setAttribute("aria-label","Оберіть рівень англійської");
+      groups.forEach(({level,items})=>{
+        const button=document.createElement("button");
+        button.type="button";
+        button.className="library-tab"+(level===openLibraryLevel?" is-active":"");
+        button.id="library-tab-"+level.toLowerCase();
+        button.setAttribute("role","tab");
+        button.setAttribute("aria-selected",String(level===openLibraryLevel));
+        button.setAttribute("aria-controls","library-panel");
+        button.tabIndex=level===openLibraryLevel?0:-1;
+        const code=document.createElement("strong"),name=document.createElement("span"),count=document.createElement("small");
+        code.textContent=level;name.textContent=levelNames[level];count.textContent=items.length+" текстів";
+        button.append(code,name,count);
+        button.addEventListener("click",()=>{if(openLibraryLevel===level)return;openLibraryLevel=level;renderBooks();document.getElementById("library-tab-"+level.toLowerCase())?.focus()});
+        button.addEventListener("keydown",event=>{
+          if(!["ArrowLeft","ArrowRight","Home","End"].includes(event.key))return;
+          event.preventDefault();
+          const current=libraryLevels.indexOf(level);
+          const next=event.key==="Home"?0:event.key==="End"?libraryLevels.length-1:(current+(event.key==="ArrowRight"?1:-1)+libraryLevels.length)%libraryLevels.length;
+          openLibraryLevel=libraryLevels[next];renderBooks();document.getElementById("library-tab-"+openLibraryLevel.toLowerCase())?.focus();
+        });
+        tabs.append(button);
+      });
+      const active=groups.find(group=>group.level===openLibraryLevel);
+      const panel=document.createElement("div");
+      panel.className="library-tab-panel";
+      panel.id="library-panel";
+      panel.setAttribute("role","tabpanel");
+      panel.setAttribute("aria-labelledby","library-tab-"+openLibraryLevel.toLowerCase());
+      const intro=document.createElement("div");
+      intro.className="library-panel-intro";
+      const heading=document.createElement("h3"),description=document.createElement("p");
+      heading.textContent=active.level+" · "+levelNames[active.level];
+      description.textContent="Оберіть історію та відкрийте її у рідері.";
+      intro.append(heading,description);
+      const books=document.createElement("div");
+      books.className="level-books";
+      active.items.forEach(({story,index})=>addBook(books,story,index));
+      panel.append(intro,books);
+      grid.append(tabs,panel);
+    }
     const FULL_DICTIONARY_PAGE_SIZE=32;
     let activeDictionaryLetter="",activeDictionaryQuery="",visibleDictionaryEntries=FULL_DICTIONARY_PAGE_SIZE;
     const fullDictionaryEntries=Object.entries(dictionary).filter(([word,translation])=>/^[A-Za-z]/.test(word)&&typeof translation==="string"&&translation.trim()).map(([word,translation])=>({word,translation:translation.trim()})).sort((first,second)=>first.word.localeCompare(second.word,"en",{sensitivity:"base"}));
