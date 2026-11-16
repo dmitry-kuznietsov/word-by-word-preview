@@ -1252,9 +1252,9 @@ main::after{right:var(--rail-x)}
   outline-offset:3px;
 }
 
-/* Keep the A1–B2 labels in the original fixed blue, independent of story accents. */
+/* A1–B2 labels follow the currently selected secondary color. */
 #library .library-tab strong,
 #library .library-tab.is-active strong,
 #library .library-tab:hover strong{
-  color:#3B6FD2;
+  color:var(--second);
 }
