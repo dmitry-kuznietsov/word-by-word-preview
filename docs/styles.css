@@ -1012,3 +1012,54 @@ main::after{right:var(--rail-x)}
   .reader-settings{width:100%;justify-content:space-between}
   .reader-tools{align-items:flex-start;flex-wrap:wrap}
 }
+
+/* Reader footer: align the section counter and jump selector as one control group. */
+.reader-foot-copy{
+  align-items:center;
+  column-gap:10px;
+  row-gap:9px;
+}
+#reader-page{
+  display:inline-flex;
+  align-items:center;
+  min-height:34px;
+  padding:0 11px;
+  border:1px solid var(--line-2);
+  border-radius:999px;
+  background:#fff;
+  color:var(--accent-deep);
+  font-size:12px;
+  line-height:1;
+  white-space:nowrap;
+}
+.reader-jump{
+  width:auto;
+  min-width:150px;
+  max-width:min(280px,46vw);
+  min-height:38px;
+  padding:0 36px 0 13px;
+  border:1px solid var(--line-2);
+  border-radius:11px;
+  background-color:#fff;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%236B7485' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2.5 4.5 3.5 3 3.5-3'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 13px center;
+  color:var(--ink);
+  font:500 13px/1.2 var(--font-display);
+  text-align:left;
+  cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+.reader-jump:hover{border-color:var(--accent)}
+.reader-jump:focus-visible{outline:3px solid var(--accent-tint);border-color:var(--accent)}
+@media(max-width:700px){
+  .reader-foot-copy{width:100%;gap:8px;justify-content:center}
+  #reader-page{min-height:32px;font-size:11px}
+  .reader-jump{flex:0 1 230px;min-width:0;max-width:100%;min-height:36px;font-size:12px}
+}
+@media(max-width:390px){
+  .reader-foot-copy{column-gap:7px}
+  .reader-jump{flex:1 1 100%;max-width:100%}
+}
