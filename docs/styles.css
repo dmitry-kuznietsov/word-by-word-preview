@@ -939,3 +939,20 @@ main::after{right:var(--rail-x)}
   margin-top:13px;
   padding-top:11px;
 }
+
+
+/* Keep long and multi-option Ukrainian translations readable inside the viewport. */
+.translation{
+  max-height:min(72vh,560px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+.translation #translation-value{
+  padding:11px 13px;
+  font-size:clamp(18px,1.7vw,20px);
+  font-weight:600;
+  line-height:1.48;
+  text-wrap:pretty;
+  overflow-wrap:anywhere;
+}
