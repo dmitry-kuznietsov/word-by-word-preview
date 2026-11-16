@@ -14,32 +14,32 @@
 @font-face{font-family:"Literata";font-style:italic;font-weight:200 900;font-display:swap;src:url("fonts/literata-latin-wght-italic.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 
 :root{
-  --bg:#FFFFFF;
+  --bg:#F7F5EF;
   --on-accent:#FFFFFF;
-  --placeholder:#6A7690;
+  --placeholder:#788176;
 
   /* Палітра: чистий синій на холодних нейтральних поверхнях. Підсвітка слів — голубий відтінок тієї ж палітри */
-  --ink:#0B1220;
-  --muted:#566179;
-  --line:#E4E9F2;
-  --line-2:#CBD4E3;
-  --line-3:#97A4BC;
-  --tint-a:#F0F5FE;
-  --tint-b:#F4F7FB;
-  --accent:#3B6FD2;
-  --accent-deep:#2B55B0;
-  --accent-tint:#E8EFFC;
-  --marker:#D6E4FA;
-  --wordmark:#E6ECF8;
+  --ink:#202820;
+  --muted:#687067;
+  --line:#E8E5DC;
+  --line-2:#D8D8CC;
+  --line-3:#A9B0A1;
+  --tint-a:#EEF1E9;
+  --tint-b:#F2F0E9;
+  --accent:#64836B;
+  --accent-deep:#496650;
+  --accent-tint:#EAF0E7;
+  --marker:#DCE7D9;
+  --wordmark:#E5EBDD;
 
   /* Другий акцент — бірюза (інші варіанти нижче). --deco — колір дрібних акцентів секції (штрихи, цифри, іконки, прогрес). Секції чергують синій і корал */
-  --second:#CC7440;
-  --second-deep:#A85A2C;
-  --second-tint:#FFF4EC;
-  --second-marker:#FBDCC6;
-  --logo-blue:#3B6FD2;
-  --logo-by:#5F78B0;
-  --logo-overlap:#16347A;
+  --second:#A9785C;
+  --second-deep:#80583F;
+  --second-tint:#F5EEE7;
+  --second-marker:#EAD8C9;
+  --logo-blue:#64836B;
+  --logo-by:#788C79;
+  --logo-overlap:#405844;
   --blue:var(--accent);
   --blue-deep:var(--accent-deep);
   --blue-tint:var(--accent-tint);
@@ -1063,3 +1063,10 @@ main::after{right:var(--rail-x)}
   .reader-foot-copy{column-gap:7px}
   .reader-jump{flex:1 1 100%;max-width:100%}
 }
+
+
+/* Modern Editorial — warm paper surfaces and a quiet sage accent. */
+body{background:var(--bg)}
+.plate{background:#FFFEFB;border-color:var(--line-2);box-shadow:0 30px 60px -48px rgba(32,40,32,.24)}
+.translation #translation-word{color:#68766A}
+.translation #translation-value{border-color:#DCE7D9;border-left-color:var(--accent);background:#F1F5EE;color:#344C38}
