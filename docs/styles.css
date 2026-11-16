@@ -14,34 +14,15 @@
 @font-face{font-family:"Literata";font-style:italic;font-weight:200 900;font-display:swap;src:url("fonts/literata-latin-wght-italic.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 
 :root{
-  --bg:#FFFFFF;
-  --on-accent:#FFFFFF;
-  --placeholder:#6A7690;
-  --ink:#0B1220;
-  --muted:#566179;
-  --line:#E4E9F2;
-  --line-2:#CBD4E3;
-  --line-3:#97A4BC;
-  --tint-a:#F0F5FE;
-  --tint-b:#F4F7FB;
-  --accent:#3B6FD2;
-  --accent-deep:#2B55B0;
-  --accent-tint:#E8EFFC;
-  --marker:#D6E4FA;
-  --wordmark:#E6ECF8;
-  --second:#CC7440;
-  --second-deep:#A85A2C;
-  --second-tint:#FFF4EC;
-  --second-marker:#FBDCC6;
-  --logo-blue:#3B6FD2;
-  --logo-by:#5F78B0;
-  --logo-overlap:#16347A;
-  --blue:var(--accent);
-  --blue-deep:var(--accent-deep);
-  --blue-tint:var(--accent-tint);
-  --deco:var(--accent);
-  --deco-deep:var(--accent-deep);
-  --deco-tint:var(--accent-tint);
+  --bg:#FFFFFF; --on-accent:#FFFFFF; --placeholder:#6A7690;
+  --ink:#0B1220; --muted:#566179; --line:#E4E9F2; --line-2:#CBD4E3; --line-3:#97A4BC;
+  --tint-a:#F0F5FE; --tint-b:#F4F7FB;
+  --accent:#3B6FD2; --accent-deep:#2B55B0; --accent-tint:#E8EFFC;
+  --marker:#D6E4FA; --wordmark:#E6ECF8;
+  --second:#CC7440; --second-deep:#A85A2C; --second-tint:#FFF4EC; --second-marker:#FBDCC6;
+  --logo-blue:#3B6FD2; --logo-by:#5F78B0; --logo-overlap:#16347A;
+  --blue:var(--accent); --blue-deep:var(--accent-deep); --blue-tint:var(--accent-tint);
+  --deco:var(--accent); --deco-deep:var(--accent-deep); --deco-tint:var(--accent-tint);
 }
 /* Другий колір: за замовчуванням бірюза. Інші: data-second="peach" (персик), "green" (зелений), "none" (лише синій) на <html> */
 :root[data-second="teal"]{--second:#1C8F97;--second-deep:#126A71;--second-tint:#EAF6F7;--second-marker:#CBEAEC}
@@ -1043,22 +1024,1179 @@ main::after{right:var(--rail-x)}
 }
 
 
-/* Editorial surfaces, now using the original cool blue palette. */
+/* Editorial surfaces, using the original cool blue palette. */
 body{background:var(--bg)}
 .plate{background:#FFFFFF;border-color:var(--line-2);box-shadow:0 30px 60px -48px rgba(11,18,32,.18)}
 .translation #translation-word{color:var(--ink)}
 .translation #translation-value{border-color:#D7E4FA;border-left-color:var(--accent);background:#F0F5FE;color:#17366F}
 
-/* Reader typography refinement — retain sans-serif reading without changing the site palette. */
+
+/* =========================================================
+   Modern Editorial — first screen and navigation
+   Presentation only; anchors and existing interactions stay intact.
+   ========================================================= */
+.site-header{
+  height:var(--header-h);
+  padding-inline:var(--pad);
+  background:linear-gradient(180deg,rgba(247,245,239,.92),rgba(247,245,239,0));
+}
+.brand{
+  gap:11px;
+  padding:7px 18px 7px 10px;
+  border-color:rgba(216,216,204,.9);
+  background:rgba(255,254,251,.88);
+  box-shadow:0 5px 22px -18px rgba(32,40,32,.35);
+}
+.logo{height:32px}
+.nav{
+  gap:2px;
+  padding:4px;
+  border-color:rgba(216,216,204,.9);
+  background:rgba(255,254,251,.9);
+  box-shadow:0 8px 28px -22px rgba(32,40,32,.38);
+}
+.nav a{
+  padding:12px 17px;
+  border-radius:999px;
+  font-size:14px;
+  transition:color .2s ease,background .2s ease;
+}
+.nav a:hover{background:#F1F3EC}
+.nav a[aria-current="true"]{color:var(--accent-deep)}
+.nav-pill{bottom:5px;height:2px}
+.menu-toggle{
+  border-color:var(--line-2);
+  background:rgba(255,254,251,.94);
+  box-shadow:0 5px 22px -18px rgba(32,40,32,.35);
+}
+.hero{
+  min-height:min(94svh,820px);
+  padding-top:calc(var(--header-h) + clamp(34px,6vh,76px));
+  padding-bottom:clamp(54px,8vh,92px);
+  isolation:isolate;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:min(76vw,980px);
+  aspect-ratio:1;
+  right:-26vw;
+  top:4%;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(220,231,217,.58) 0%,rgba(220,231,217,.2) 38%,rgba(220,231,217,0) 70%);
+  pointer-events:none;
+}
+.hero-grid{
+  grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+  gap:clamp(44px,7vw,112px);
+}
+.hero-title{
+  max-width:16ch;
+  font-size:clamp(40px,5.35vw,74px);
+  line-height:1.035;
+  letter-spacing:-.045em;
+  font-weight:520;
+}
+.hero-sub{
+  max-width:39ch;
+  margin-top:clamp(25px,4vh,38px);
+  font-size:clamp(17px,1.35vw,19px);
+  line-height:1.7;
+}
+.hero-sub::before{
+  width:42px;
+  height:2px;
+  margin-bottom:22px;
+  border-radius:2px;
+}
+.hero-actions{gap:18px 28px;margin-top:clamp(30px,5vh,44px)}
+.hero-actions .btn{
+  min-height:54px;
+  padding:0 25px 0 28px;
+  border-color:var(--accent);
+  background:var(--accent);
+  color:#fff;
+  box-shadow:0 10px 24px -16px rgba(73,102,80,.8);
+}
+.hero-actions .btn:hover{
+  border-color:var(--accent-deep);
+  background:var(--accent-deep);
+  color:#fff;
+  box-shadow:0 13px 28px -16px rgba(73,102,80,.65);
+  transform:translateY(-1px);
+}
+.hero-actions .btn .btn-icon{color:inherit}
+.hero-actions .link-line{
+  border-bottom-color:rgba(104,112,103,.42);
+  color:var(--muted);
+  font-size:14px;
+}
+.hero-actions .link-line:hover{color:var(--accent-deep)}
+.hero-stage{max-width:590px;margin-left:auto}
+.hero-stage::before{
+  inset:18px -18px -18px 18px;
+  border:1px solid rgba(169,176,161,.6);
+  border-radius:28px;
+}
+.plate{
+  padding:clamp(28px,3.2vw,46px);
+  border-color:#E4E2D8;
+  border-radius:24px;
+  background:rgba(255,254,251,.96);
+  box-shadow:0 34px 76px -54px rgba(32,40,32,.36),0 2px 8px rgba(32,40,32,.035);
+}
+.plate-title{font-size:clamp(25px,2.6vw,36px)}
+.plate-text{font-size:clamp(19px,1.6vw,23px);line-height:1.82}
+.plate-hint{border-top-style:solid;border-top-color:#E9E7DE}
+.mobile-nav{background:var(--bg)}
+.mobile-nav a{border-color:var(--line-2)}
+@media(max-width:900px){
+  .hero{min-height:auto;padding-top:calc(var(--header-h) + 42px);padding-bottom:68px}
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .hero-copy{max-width:760px}
+  .hero-title{max-width:17ch;font-size:clamp(40px,8vw,66px)}
+  .hero-stage{width:min(100%,650px);margin:0 auto}
+  .hero::before{width:110vw;right:-55vw;top:24%}
+}
+@media(max-width:560px){
+  .site-header{padding-inline:16px}
+  .brand{padding:5px 14px 5px 8px}
+  .logo{height:29px}
+  .menu-toggle{padding:10px 14px 10px 16px}
+  .hero{padding-top:calc(var(--header-h) + 34px);padding-bottom:54px}
+  .hero-grid{gap:36px}
+  .hero-title{font-size:clamp(38px,10.2vw,52px);line-height:1.06}
+  .hero-sub{margin-top:24px;font-size:16px;line-height:1.65}
+  .hero-actions{align-items:flex-start;gap:18px;margin-top:28px}
+  .hero-actions .btn{min-height:50px;padding-inline:22px}
+  .hero-actions .link-line{align-self:center}
+  .hero-stage::before{inset:12px -5px -12px 12px;border-radius:21px}
+  .plate{padding:25px 22px;border-radius:19px}
+  .plate-text{font-size:18px;line-height:1.75}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-actions .btn:hover{transform:none}
+}
+
+
+/* Modern Editorial — library as a calm reading collection. */
+#library .level-group{
+  position:relative;
+  grid-template-columns:minmax(150px,19%) minmax(0,1fr);
+  gap:clamp(22px,3.4vw,54px);
+  padding:clamp(30px,3.2vw,46px) 0;
+  background:linear-gradient(90deg,rgba(220,231,217,.42),rgba(220,231,217,0) 24%) 0 0/100% 100% no-repeat,
+    linear-gradient(90deg,var(--line-2),var(--line-2)) 0 0/100% 1px no-repeat;
+}
+#library .level-head{
+  top:calc(var(--header-h) + 34px);
+  padding:5px 0 0 2px;
+}
+#library .level-head b{
+  color:var(--accent);
+  font-weight:450;
+  letter-spacing:-.075em;
+}
+#library .level-head span{
+  margin-top:13px;
+  color:var(--ink);
+  font-size:16px;
+  font-weight:600;
+}
+#library .level-head small{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:.025em;
+}
+#library .level-books{
+  gap:13px;
+  padding-left:clamp(18px,2.5vw,36px);
+  border-left:1px solid var(--line-2);
+}
+#library .book{
+  border-color:#E6E5DA;
+  border-radius:16px;
+  background:rgba(255,254,251,.92);
+  box-shadow:0 3px 12px -10px rgba(32,40,32,.24);
+}
+#library .book>button:not(.my-book-remove){
+  min-height:clamp(250px,19vw,278px);
+  padding:19px 19px 17px;
+  gap:17px;
+}
+#library .book-genre{
+  color:#73796F;
+  font-size:12px;
+  letter-spacing:.015em;
+}
+#library .book-genre::before{
+  width:17px;
+  height:2px;
+  border-radius:2px;
+  background:var(--accent);
+}
+#library .book-level{
+  border-color:#E2E6DC;
+  background:#F4F5EF;
+  color:#667363;
+  font-size:11px;
+}
+#library .book-icon{
+  width:46px;
+  height:46px;
+  color:#829780;
+}
+#library .book-title{
+  color:#29342A;
+  font-family:var(--font-read);
+  font-size:clamp(20px,1.55vw,23px);
+  font-weight:600;
+  letter-spacing:-.025em;
+  line-height:1.2;
+}
+#library .book-note{
+  color:#73796F;
+  font-size:13px;
+  line-height:1.6;
+}
+#library .open{
+  border-top:1px solid #EAE9E0;
+  color:var(--accent-deep);
+  font-size:13px;
+}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  #library .book:hover{
+    border-color:#B9C9B4;
+    background:#FFFEFB;
+    box-shadow:0 15px 30px -24px rgba(42,62,43,.34);
+    transform:translateY(-3px);
+  }
+  #library .book:hover .book-icon{color:var(--accent-deep)}
+}
+#library .library-level{
+  border-top:1px solid var(--line-2);
+}
+#library .library-level:last-child{
+  border-bottom:1px solid var(--line-2);
+}
+#library .library-level summary b{
+  color:var(--accent);
+  font-weight:450;
+}
+#library .library-level summary span{
+  color:var(--ink);
+  font-weight:600;
+}
+#library .library-level summary small{
+  color:var(--muted);
+}
+#library .library-level summary::after{
+  border-color:#DCE4D8;
+  background:#F4F5EF;
+  color:var(--accent-deep);
+}
+#library .level-books-flat .book{
+  background:#FFFEFB;
+}
+@media(max-width:900px){
+  #library .level-group{
+    grid-template-columns:minmax(130px,18%) minmax(0,1fr);
+    gap:18px;
+    padding:28px 0;
+  }
+  #library .level-books{padding-left:18px}
+}
+@media(max-width:560px){
+  #library .level-group{
+    grid-template-columns:1fr;
+    gap:15px;
+    padding:24px 0;
+    background:linear-gradient(90deg,var(--line-2),var(--line-2)) 0 0/100% 1px no-repeat;
+  }
+  #library .level-head{
+    position:static;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    align-items:baseline;
+    column-gap:12px;
+    padding:0;
+  }
+  #library .level-head b{
+    grid-row:span 2;
+    font-size:54px;
+  }
+  #library .level-head span{margin:0;font-size:15px}
+  #library .level-head small{margin:2px 0 0}
+}
+
+
+/* Modern Editorial — reading experience: quiet paper, clear hierarchy, generous rhythm. */
+#reader.sheet{
+  --fill:#F1F3EC;
+  padding-top:clamp(58px,7vw,96px);
+  padding-bottom:clamp(72px,8vw,112px);
+}
+#reader .reader-layout{
+  gap:clamp(24px,3.2vw,42px);
+}
+#reader .reader-copy{
+  padding:clamp(22px,3vw,34px) clamp(22px,3.5vw,42px);
+  border:1px solid #E2E5DA;
+  border-radius:20px;
+  background:linear-gradient(112deg,#EEF2E9 0%,#F8F8F3 62%,#FFFEFB 100%);
+  box-shadow:0 8px 26px -24px rgba(32,40,32,.24);
+}
+#reader .reader-copy .section-title{
+  color:#29372C;
+  font-family:var(--font-read);
+  font-weight:600;
+  letter-spacing:-.04em;
+}
+#reader .reader-copy>p:not(.notice){
+  color:#626D62;
+  line-height:1.7;
+}
+#reader .gestures{
+  gap:9px;
+  border-top-color:#DDE3D7;
+}
+#reader .gestures div{
+  border:1px solid #E1E6DC;
+  border-radius:10px;
+  background:rgba(255,254,251,.76);
+}
+#reader .gestures dt{
+  color:var(--accent-deep);
+  font-weight:650;
+}
+#reader .gestures dd{color:#697268}
+#reader .notice{
+  border-left-color:var(--accent);
+  color:#657064;
+}
+#reader .notice strong{color:#3F5943}
+#reader .reader-card{
+  overflow:hidden;
+  border:1px solid #E1E2D8;
+  border-radius:22px;
+  background:#FFFEFB;
+  box-shadow:0 22px 58px -46px rgba(42,54,39,.32),0 3px 10px -8px rgba(42,54,39,.12);
+}
+#reader .reader-bar{
+  height:3px;
+  background:#E9EDE5;
+}
+#reader .reader-bar i{background:var(--accent)}
+#reader .reader-head{
+  min-height:68px;
+  border-bottom:1px solid #EAEAE1;
+  background:#F9F9F4;
+}
+#reader .reader-meta b{
+  border-color:#CBD8C8;
+  background:#EEF3EA;
+  color:#496650;
+}
+#reader .reader-meta span:last-child{color:#697268}
+#reader .reader-tools{align-items:center}
+#reader .reader-font-controls{
+  border-color:#E0E4DA;
+  background:#FFFEFB;
+}
+#reader .reader-font-controls button{
+  border-radius:8px;
+  color:#506650;
+}
+#reader .reader-font-controls button:hover:not(:disabled){
+  background:#EEF3EA;
+}
+#reader .reader-font-controls output{color:#687368}
+#reader .reader-time{
+  border-color:#E1E5DC;
+  background:#FFFEFB;
+  color:#667264;
+}
+#reader .story{
+  padding:clamp(38px,5.4vw,68px) clamp(24px,6vw,78px) clamp(42px,5.5vw,70px);
+  background:
+    linear-gradient(90deg,rgba(238,242,233,.34),transparent 15%,transparent 85%,rgba(238,242,233,.28));
+}
+#reader .chapter{
+  color:#71856F;
+  font-size:11px;
+  letter-spacing:.12em;
+}
+#reader #reader-title{
+  margin:.48em 0 .72em;
+  color:#263329;
+  font-family:var(--font-read);
+  font-weight:600;
+  font-size:clamp(32px,4.2vw,48px);
+  letter-spacing:-.045em;
+  line-height:1.12;
+}
+#reader #reader-text{
+  color:#303A31;
+}
+#reader #reader-text p{
+  margin-bottom:1.05em;
+  font-family:var(--font-read);
+  font-size:var(--reader-font-size,18px)!important;
+  font-weight:400;
+  line-height:1.92;
+  letter-spacing:0;
+}
+#reader #reader-text p:last-child{margin-bottom:0}
+#reader .word{
+  border-radius:.22em;
+  background-image:linear-gradient(rgba(220,231,217,.9),rgba(220,231,217,.9));
+}
+#reader .word.selected{
+  background:#EAD8C9;
+  box-shadow:inset 0 -2px 0 #A9785C;
+}
+#reader .reader-foot{
+  min-height:72px;
+  border-top:1px solid #EAEAE1;
+  background:#F9F9F4;
+}
+#reader .reader-foot-copy{color:#758073}
+#reader #reader-page{
+  border-color:#DDE4D8;
+  background:#F0F4EC;
+  color:#496650;
+}
+#reader .reader-jump{
+  border-color:#DDE2D8;
+  background-color:#FFFEFB;
+}
+#reader .reader-nav{
+  border-color:#DDE3D8;
+  background:#FFFEFB;
+  color:#536D55;
+}
+#reader .reader-nav:hover:not(:disabled){
+  border-color:#AFC2AC;
+  background:#EEF3EA;
+}
+@media(max-width:700px){
+  #reader.sheet{padding-top:46px;padding-bottom:60px}
+  #reader .reader-copy{padding:20px 18px}
+  #reader .reader-head{background:#F9F9F4}
+  #reader .story{
+    padding:30px 22px 38px;
+    background:#FFFEFB;
+  }
+  #reader #reader-title{font-size:clamp(29px,7.5vw,38px)}
+  #reader #reader-text p{line-height:1.82}
+  #reader .reader-foot{background:#F9F9F4}
+}
+@media(max-width:390px){
+  #reader .story{padding:26px 18px 32px}
+  #reader #reader-text p{line-height:1.78}
+}
+@media(prefers-reduced-motion:reduce){
+  #reader .reader-card,
+  #reader .reader-nav,
+  #reader .reader-font-controls button{transition:none}
+}
+
+
+/* Modern Editorial — level tabs */
+#library .book-grid.library-tabs-layout{
+  margin-top:clamp(28px,3.2vw,44px);
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:22px;
+}
+#library .library-tabs{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  padding:7px;
+  border:1px solid var(--line-2);
+  border-radius:18px;
+  background:#eeede6;
+}
+#library .library-tab{
+  min-width:0;
+  min-height:76px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;
+  align-content:center;
+  align-items:baseline;
+  column-gap:11px;
+  row-gap:3px;
+  padding:12px 16px;
+  border:1px solid transparent;
+  border-radius:13px;
+  background:transparent;
+  color:var(--muted);
+  text-align:left;
+  cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,color .2s ease,transform .2s ease;
+}
+#library .library-tab strong{
+  grid-row:1 / 3;
+  color:var(--ink-soft);
+  font:500 clamp(25px,3vw,34px)/1 var(--font-display);
+  letter-spacing:-.055em;
+}
+#library .library-tab span{font:500 14px/1.2 var(--font-display);color:var(--ink)}
+#library .library-tab small{font:400 12px/1.2 var(--font-display);color:var(--muted)}
+#library .library-tab:hover{background:rgba(255,254,251,.72);color:var(--ink)}
+#library .library-tab.is-active{
+  background:#fffefa;
+  border-color:rgba(100,131,107,.25);
+  box-shadow:0 3px 12px rgba(38,48,37,.07),0 1px 2px rgba(38,48,37,.04);
+  color:var(--ink);
+}
+#library .library-tab.is-active strong{color:var(--accent,var(--green,#64836b))}
+#library .library-tab:focus-visible{outline:3px solid rgba(100,131,107,.35);outline-offset:3px}
+#library .library-tab-panel{
+  padding:clamp(20px,2.8vw,34px);
+  border:1px solid var(--line-2);
+  border-radius:20px;
+  background:rgba(255,254,251,.72);
+}
+#library .library-panel-intro{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:22px;
+}
+#library .library-panel-intro h3{
+  margin:0;
+  color:var(--ink);
+  font:500 clamp(20px,2.4vw,27px)/1.2 var(--font-display);
+  letter-spacing:-.035em;
+}
+#library .library-panel-intro p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+#library .library-tab-panel .level-books{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  padding:0;
+  border:0;
+}
+@media(max-width:760px){
+  #library .library-tabs{gap:5px;padding:5px;border-radius:15px}
+  #library .library-tab{min-height:68px;padding:10px 8px;column-gap:6px;justify-content:center}
+  #library .library-tab strong{font-size:27px}
+  #library .library-tab span{font-size:12px}
+  #library .library-tab small{font-size:10px}
+  #library .library-tab-panel{padding:18px 14px;border-radius:17px}
+  #library .library-panel-intro{display:block;margin-bottom:16px}
+  #library .library-panel-intro p{margin-top:5px}
+  #library .library-tab-panel .level-books{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+}
+@media(max-width:480px){
+  #library .library-tab-panel .level-books{grid-template-columns:minmax(0,1fr)}
+  #library .library-tab{grid-template-columns:1fr;grid-template-rows:auto auto auto;justify-items:center;text-align:center;row-gap:2px;padding:9px 3px}
+  #library .library-tab strong{grid-row:auto;font-size:25px}
+  #library .library-tab span{font-size:11px}
+  #library .library-tab small{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+  #library .library-tab{transition:none}
+}
+
+
+/* Modern Editorial — tighter rhythm in the interactive hero sample. */
+.plate-text{line-height:1.55}
+@media(max-width:560px){.plate-text{line-height:1.55}}
+
+
+/* Modern Editorial — story cards as a consistent book collection. */
+#library .library-tab-panel .book{
+  min-width:0;
+  min-height:294px;
+  overflow:hidden;
+  border:1px solid #e6e4da;
+  border-radius:18px;
+  background:linear-gradient(155deg,rgba(255,255,252,.98),rgba(248,247,240,.96));
+  box-shadow:0 3px 12px rgba(39,48,37,.035);
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+#library .library-tab-panel .book>button:not(.my-book-remove){
+  min-height:294px;
+  height:100%;
+  padding:20px 20px 17px;
+  gap:18px;
+}
+#library .library-tab-panel .book-top{align-items:center}
+#library .library-tab-panel .book-genre{
+  color:#788174;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+}
+#library .library-tab-panel .book-genre::before{width:17px;background:#9aaa91}
+#library .library-tab-panel .book-level{
+  padding:5px 9px;
+  border-color:#e5e5da;
+  background:rgba(255,255,255,.62);
+  color:#737b6d;
+  font-size:11px;
+}
+#library .library-tab-panel .book-icon{
+  width:48px;
+  height:48px;
+  color:var(--deco);
+}
+#library .library-tab-panel .book-bottom{display:block}
+#library .library-tab-panel .book-title{
+  color:#293229;
+  font-size:clamp(19px,1.55vw,22px);
+  line-height:1.18;
+  letter-spacing:-.035em;
+}
+#library .library-tab-panel .book-note{
+  display:-webkit-box;
+  max-height:4.7em;
+  margin-top:9px;
+  overflow:hidden;
+  opacity:1;
+  color:#777d72;
+  font-size:13px;
+  line-height:1.55;
+  -webkit-line-clamp:3;
+}
+#library .library-tab-panel .open{
+  margin-top:15px;
+  padding-top:12px;
+  border-top:1px solid #e9e7de;
+  color:#607d65;
+  font-size:13px;
+}
+#library .library-tab-panel .open-label{gap:7px}
+@media(hover:hover){
+  #library .library-tab-panel .book:hover{
+    transform:translateY(-3px);
+    border-color:rgba(100,131,107,.48);
+    box-shadow:0 14px 28px -20px rgba(39,48,37,.28);
+  }
+  #library .library-tab-panel .book:hover .book-icon{transform:translateY(-2px) scale(1.04)}
+}
+@media(max-width:760px){
+  #library .library-tab-panel .book,
+  #library .library-tab-panel .book>button:not(.my-book-remove){min-height:270px}
+  #library .library-tab-panel .book>button:not(.my-book-remove){padding:17px 16px 15px;gap:15px}
+}
+@media(max-width:480px){
+  #library .library-tab-panel .book,
+  #library .library-tab-panel .book>button:not(.my-book-remove){min-height:248px}
+  #library .library-tab-panel .book>button:not(.my-book-remove){padding:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  #library .library-tab-panel .book,
+  #library .library-tab-panel .book-icon{transition:none}
+}
+
+
+/* Modern Editorial — translation card: compact, calm, and easy to scan. */
+.translation{
+  width:min(352px,calc(100vw - 24px));
+  padding:19px 20px 18px;
+  border:1px solid #e3e5da;
+  border-radius:17px;
+  background:#fffefa;
+  color:#293229;
+  box-shadow:0 18px 48px -26px rgba(32,40,32,.34),0 3px 10px rgba(32,40,32,.07);
+  animation:pop .2s ease-out;
+}
+.translation .translation-label{
+  padding-right:34px;
+  color:#858b7e;
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:.075em;
+}
+.translation #translation-word{
+  margin:8px 32px 15px 0;
+  color:#354337;
+  font:600 clamp(18px,1.7vw,21px)/1.32 var(--font-display);
+  letter-spacing:-.025em;
+  overflow-wrap:anywhere;
+}
+.translation .translation-lemma{
+  margin:-8px 0 14px;
+  color:#818879;
+  font:400 12px/1.45 var(--font-display);
+}
+.translation .translation-result-label{
+  margin:0 0 7px;
+  color:#71806d;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.075em;
+}
+.translation #translation-value{
+  padding:12px 14px;
+  border:1px solid #e2e9dc;
+  border-left:3px solid #82977c;
+  border-radius:10px;
+  background:#f4f6f0;
+  color:#354b38;
+  font:600 clamp(19px,1.8vw,22px)/1.42 var(--font-display);
+  text-wrap:pretty;
+  overflow-wrap:anywhere;
+}
+.translation .translation-context{
+  margin-top:13px;
+  padding-top:11px;
+  border-top:1px solid #ecece4;
+}
+.translation .translation-context small{
+  margin-bottom:5px;
+  color:#858b7e;
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:.07em;
+}
+.translation .translation-context p{
+  color:#747b70;
+  font:400 13px/1.55 var(--font-read);
+}
+.translation .close{
+  top:12px;
+  right:12px;
+  width:27px;
+  height:27px;
+  border-color:#e7e8df;
+  background:#f8f8f3;
+  color:#687365;
+  transition:background .18s ease,border-color .18s ease,color .18s ease;
+}
+.translation .close:hover{
+  border-color:#cbd7c5;
+  background:#edf2e9;
+  color:#405b43;
+}
+@media(max-width:560px){
+  .translation{
+    width:min(340px,calc(100vw - 20px));
+    padding:17px 17px 16px;
+    border-radius:15px;
+  }
+  .translation #translation-word{font-size:18px;margin-bottom:13px}
+  .translation #translation-value{padding:11px 12px;font-size:19px}
+}
+@media(prefers-reduced-motion:reduce){
+  .translation{animation:none}
+  .translation .close{transition:none}
+}
+
+
+/* Modern Editorial — refined reading typography and paragraph rhythm. */
+#reader #reader-title{
+  max-width:20ch;
+  margin-bottom:.82em;
+  line-height:1.08;
+  text-wrap:balance;
+}
+#reader #reader-text{
+  width:100%;
+  max-width:68ch;
+  margin-inline:auto;
+}
+#reader #reader-text p{
+  max-width:none;
+  margin:0 0 1.18em;
+  font-size:var(--reader-font-size,18px)!important;
+  line-height:1.82;
+  letter-spacing:.003em;
+  text-wrap:pretty;
+  overflow-wrap:break-word;
+  color:#354036;
+}
+#reader #reader-text p:last-child{margin-bottom:0}
+#reader .chapter{
+  margin-bottom:10px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.14em;
+}
+@media(min-width:1100px){
+  #reader .story{
+    padding-top:clamp(48px,5.2vw,72px);
+    padding-bottom:clamp(48px,5.2vw,72px);
+  }
+}
+@media(max-width:700px){
+  #reader #reader-title{
+    max-width:17ch;
+    margin-bottom:.72em;
+    line-height:1.12;
+  }
+  #reader #reader-text{
+    max-width:100%;
+  }
+  #reader #reader-text p{
+    margin-bottom:1.12em;
+    line-height:1.76;
+    letter-spacing:0;
+  }
+}
+@media(max-width:390px){
+  #reader #reader-text p{line-height:1.72}
+}
+
+
+/* Modern Editorial — compact reader toolbar with a clear control hierarchy. */
+#reader .reader-head{
+  min-height:60px;
+  padding:11px clamp(18px,3vw,34px);
+  gap:14px;
+  background:#F8F8F2;
+}
+#reader .reader-meta{
+  gap:9px;
+  min-width:0;
+  font-size:13px;
+}
+#reader .reader-meta b{
+  min-width:38px;
+  padding:5px 10px;
+  border-radius:9px;
+  font-size:12px;
+  text-align:center;
+}
+#reader .reader-meta span:last-child{
+  overflow:hidden;
+  color:#697268;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#reader .reader-tools{
+  gap:12px;
+}
+#reader .reader-settings{
+  gap:6px;
+}
+#reader .reader-font-controls{
+  min-height:38px;
+  gap:3px;
+  padding:3px;
+  border:1px solid #E2E5DA;
+  border-radius:11px;
+  background:#FFFEFB;
+  box-shadow:0 1px 2px rgba(38,48,37,.035);
+}
+#reader .reader-font-controls button{
+  min-width:32px;
+  height:30px;
+  padding:0 7px;
+  border-radius:8px;
+  color:#536D55;
+  font-size:14px;
+}
+#reader .reader-font-controls output{
+  min-width:43px;
+  color:#687368;
+  font-size:11px;
+}
+#reader .reader-time{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:32px;
+  padding:0 10px;
+  border:1px solid #E5E7DE;
+  border-radius:9px;
+  background:#FDFDF9;
+  color:#788074;
+  font-size:12px;
+  white-space:nowrap;
+}
+#reader .reader-font-controls button:focus-visible{
+  outline:2px solid #8BA187;
+  outline-offset:2px;
+}
+@media(max-width:700px){
+  #reader .reader-head{
+    align-items:center;
+    padding:10px 14px;
+    gap:9px;
+  }
+  #reader .reader-meta{gap:7px}
+  #reader .reader-meta b{min-width:35px;padding:5px 8px}
+  #reader .reader-tools{
+    width:auto;
+    flex:0 0 auto;
+    gap:7px;
+  }
+  #reader .reader-font-controls{min-height:36px}
+  #reader .reader-font-controls button{min-width:29px;height:28px}
+  #reader .reader-font-controls output{min-width:38px}
+  #reader .reader-time{min-height:30px;padding:0 8px;font-size:11px}
+}
+@media(max-width:420px){
+  #reader .reader-head{flex-wrap:wrap}
+  #reader .reader-meta{flex:1 1 auto}
+  #reader .reader-tools{
+    width:100%;
+    justify-content:space-between;
+  }
+  #reader .reader-settings{margin-left:auto}
+  #reader .reader-time{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+  #reader .reader-font-controls button{transition:none}
+}
+
+
+/* Modern Editorial — clearer reader footer and chapter navigation. */
+.reader-foot{
+  grid-template-columns:44px minmax(0,1fr) 44px;
+  align-items:center;
+  gap:10px;
+  padding:18px clamp(16px,3vw,34px);
+  background:linear-gradient(180deg,rgba(248,247,241,.35),rgba(248,247,241,.78));
+}
+.reader-foot-copy{
+  grid-column:2;
+  display:grid;
+  grid-template-columns:max-content minmax(150px,220px);
+  justify-content:center;
+  align-items:center;
+  gap:9px 12px;
+  min-width:0;
+  color:var(--muted);
+  font:400 13px/1.4 var(--font-display);
+}
+#reader-guide{
+  grid-column:1/-1;
+  color:var(--muted);
+  font-size:12px;
+  text-align:center;
+}
+#reader-page{
+  justify-self:end;
+  white-space:nowrap;
+  font-size:13px;
+  font-variant-numeric:tabular-nums;
+}
+.reader-jump{
+  width:100%;
+  max-width:220px;
+  min-width:0;
+  min-height:38px;
+  padding:7px 30px 7px 12px;
+  border-color:var(--line-2);
+  border-radius:11px;
+  background-color:#fff;
+  color:var(--ink);
+  font:500 12.5px/1.3 var(--font-display);
+  box-shadow:0 1px 2px rgba(32,40,32,.035);
+}
+.reader-nav{
+  width:42px;
+  height:42px;
+  border-color:var(--line-2);
+  background:rgba(255,254,251,.82);
+  box-shadow:0 2px 7px rgba(32,40,32,.045);
+  transition:background-color .2s,border-color .2s,color .2s,transform .2s,opacity .2s;
+}
+.reader-nav:not(:disabled):hover{
+  background:var(--accent-tint);
+  border-color:var(--accent);
+  color:var(--accent-deep);
+  transform:translateY(-1px);
+}
+.reader-nav:focus-visible,.reader-jump:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+.reader-nav:disabled{box-shadow:none}
+@media(max-width:700px){
+  .reader-foot{
+    grid-template-columns:38px minmax(0,1fr) 38px;
+    gap:7px;
+    padding:14px 10px;
+  }
+  .reader-foot-copy{
+    grid-template-columns:max-content minmax(0,1fr);
+    gap:8px;
+  }
+  #reader-guide{font-size:11px;line-height:1.4}
+  #reader-page{font-size:12px}
+  .reader-jump{
+    width:100%;
+    max-width:none;
+    min-height:36px;
+    font-size:11.5px;
+  }
+  .reader-nav{width:36px;height:36px}
+}
+@media(max-width:390px){
+  .reader-foot{grid-template-columns:34px minmax(0,1fr) 34px;gap:5px;padding-inline:7px}
+  .reader-nav{width:34px;height:34px}
+  .reader-foot-copy{grid-template-columns:max-content minmax(0,1fr);column-gap:7px}
+  #reader-guide{font-size:10.5px}
+}
+@media(prefers-reduced-motion:reduce){
+  .reader-nav{transition:none}
+}
+
+
+/* Modern Editorial — clearer hierarchy inside the translation card. */
+.translation{
+  width:min(360px,calc(100vw - 24px));
+  padding:20px 20px 18px;
+  border-color:#e1e5d9;
+  border-radius:18px;
+  background:#fffefa;
+  box-shadow:0 20px 52px -27px rgba(32,40,32,.38),0 4px 14px rgba(32,40,32,.07);
+}
+.translation .translation-label{
+  display:block;
+  margin:0 38px 0 0;
+  color:#849080;
+  font:700 9.5px/1.4 var(--font-display);
+  letter-spacing:.105em;
+  text-transform:uppercase;
+}
+.translation #translation-word{
+  display:block;
+  margin:9px 36px 12px 0;
+  padding-bottom:11px;
+  border-bottom:1px solid #eeefe8;
+  color:#26372a;
+  font:600 clamp(20px,1.8vw,23px)/1.28 var(--font-display);
+  letter-spacing:-.03em;
+}
+.translation .translation-lemma{
+  display:block;
+  margin:-3px 0 15px;
+  padding:7px 10px;
+  border:1px solid #e9ede4;
+  border-radius:8px;
+  background:#f8f9f5;
+  color:#667361;
+  font:400 12px/1.45 var(--font-display);
+}
+.translation .translation-result-label{
+  display:block;
+  margin:0 0 7px;
+  color:#788873;
+  font:700 9.5px/1.4 var(--font-display);
+  letter-spacing:.095em;
+  text-transform:uppercase;
+}
+.translation #translation-value{
+  min-height:48px;
+  padding:13px 15px;
+  border:1px solid #e0e8da;
+  border-left:3px solid #82977c;
+  border-radius:11px;
+  background:#f3f6ef;
+  color:#304b34;
+  font:600 clamp(19px,1.8vw,22px)/1.42 var(--font-display);
+  letter-spacing:-.012em;
+  overflow-wrap:anywhere;
+}
+.translation .translation-context{
+  margin-top:15px;
+  padding:12px 13px 11px;
+  border:1px solid #eeefe8;
+  border-radius:11px;
+  background:#fafaf6;
+}
+.translation .translation-context small{
+  display:block;
+  margin:0 0 5px;
+  color:#8a907f;
+  font:700 9px/1.4 var(--font-display);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.translation .translation-context p{
+  margin:0;
+  color:#687266;
+  font:400 13px/1.58 var(--font-read);
+  overflow-wrap:anywhere;
+}
+.translation .close{
+  top:13px;
+  right:13px;
+  display:grid;
+  place-items:center;
+  width:29px;
+  height:29px;
+  padding:0;
+  border:1px solid #e5e8df;
+  border-radius:50%;
+  background:#f8f9f5;
+  color:#657260;
+  font:400 19px/1 var(--font-display);
+}
+.translation .close:hover{
+  border-color:#cbd8c5;
+  background:#edf2e9;
+  color:#405b43;
+}
+@media(max-width:560px){
+  .translation{
+    width:min(348px,calc(100vw - 20px));
+    padding:18px 17px 16px;
+    border-radius:16px;
+  }
+  .translation #translation-word{
+    margin-top:8px;
+    margin-bottom:11px;
+    font-size:19px;
+  }
+  .translation .translation-lemma{margin-bottom:13px}
+  .translation #translation-value{
+    min-height:44px;
+    padding:11px 12px;
+    font-size:19px;
+  }
+  .translation .translation-context{margin-top:12px;padding:10px 11px}
+}
+@media(prefers-reduced-motion:reduce){
+  .translation{animation:none}
+  .translation .close{transition:none}
+}
+
+
+/* Reader correction — restore full-width text and tighter line spacing. */
+#reader #reader-text{
+  width:100%;
+  max-width:none;
+  margin-inline:0;
+}
+#reader #reader-text p{
+  width:100%;
+  max-width:none;
+  margin-bottom:.78em;
+  line-height:1.58;
+  letter-spacing:0;
+}
+#reader #reader-text p:last-child{margin-bottom:0}
+@media(max-width:700px){
+  #reader #reader-text{max-width:none}
+  #reader #reader-text p{
+    max-width:none;
+    margin-bottom:.72em;
+    line-height:1.55;
+  }
+}
+@media(max-width:390px){
+  #reader #reader-text p{line-height:1.52}
+}
+
+
+/* Reader typography refinement — sans-serif type, without overriding original colors. */
 #reader .reader-card{overflow:hidden;border-radius:22px}
 #reader .chapter{font-family:var(--font-display)}
 #reader #reader-title{font-family:var(--font-display);font-weight:600;letter-spacing:-.035em}
 #reader #reader-text,
-#reader #reader-text p{
-  font-family:var(--font-display)!important;
-  font-weight:400;
-  letter-spacing:-.012em;
-  line-height:1.72;
-}
+#reader #reader-text p{font-family:var(--font-display)!important;font-weight:400;letter-spacing:-.012em;line-height:1.72}
 #reader #reader-text p{margin-bottom:.82em;font-size:var(--reader-font-size,18px)!important}
 @media(max-width:700px){#reader #reader-text p{line-height:1.65}}
