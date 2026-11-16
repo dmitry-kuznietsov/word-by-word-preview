@@ -956,3 +956,8 @@ main::after{right:var(--rail-x)}
   text-wrap:pretty;
   overflow-wrap:anywhere;
 }
+
+
+/* Word lemma hint in the translation card. */
+.translation .translation-lemma{display:block;margin:-9px 0 14px;color:var(--muted);font:500 13px/1.4 var(--font-display)}
+.translation .translation-lemma[hidden]{display:none}
