@@ -2204,3 +2204,30 @@ body{background:var(--bg)}
   .translation{animation:none}
   .translation .close{transition:none}
 }
+
+
+/* Reader correction — restore full-width text and tighter line spacing. */
+#reader #reader-text{
+  width:100%;
+  max-width:none;
+  margin-inline:0;
+}
+#reader #reader-text p{
+  width:100%;
+  max-width:none;
+  margin-bottom:.78em;
+  line-height:1.58;
+  letter-spacing:0;
+}
+#reader #reader-text p:last-child{margin-bottom:0}
+@media(max-width:700px){
+  #reader #reader-text{max-width:none}
+  #reader #reader-text p{
+    max-width:none;
+    margin-bottom:.72em;
+    line-height:1.55;
+  }
+}
+@media(max-width:390px){
+  #reader #reader-text p{line-height:1.52}
+}
