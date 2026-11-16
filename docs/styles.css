@@ -2391,3 +2391,94 @@ body{background:var(--bg);color:var(--ink)}
 @media(prefers-reduced-motion:reduce){
   #library .library-tab,#library .library-tab-panel .book{transition:none}
 }
+
+
+/* Reader refinement — soft sans-serif typography and unmistakable surface contrast. */
+#reader .reader-card{
+  overflow:hidden;
+  border:1px solid #AEBBB2;
+  border-radius:22px;
+  background:#FFFFFF;
+  box-shadow:0 20px 55px rgba(25,42,31,.14);
+}
+#reader .reader-head{
+  background:#244D38;
+  border-bottom:1px solid #173D2A;
+  color:#FFFFFF;
+}
+#reader .reader-meta,
+#reader .reader-meta span,
+#reader .reader-head .reader-time{color:#F3F7F3}
+#reader .reader-meta b{
+  border:1px solid rgba(255,255,255,.3);
+  background:#FFFFFF;
+  color:#1E5137;
+}
+#reader .reader-font-controls{
+  border:1px solid #C6D5CA;
+  background:#FFFFFF;
+}
+#reader .reader-font-controls button,
+#reader .reader-font-controls output{color:#214D36}
+#reader .reader-time{
+  border-color:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.12);
+  color:#FFFFFF;
+}
+#reader .story{
+  background:#FFFFFF;
+  background-image:none;
+}
+#reader .chapter{
+  color:#397451;
+  font-family:var(--font-display);
+}
+#reader #reader-title{
+  color:#1D3025;
+  font-family:var(--font-display);
+  font-weight:600;
+  letter-spacing:-.035em;
+}
+#reader #reader-text,
+#reader #reader-text p{
+  color:#26352C;
+  font-family:var(--font-display)!important;
+  font-weight:400;
+  letter-spacing:-.012em;
+  line-height:1.72;
+}
+#reader #reader-text p{
+  margin-bottom:.82em;
+  font-size:var(--reader-font-size,18px)!important;
+}
+#reader .reader-foot{
+  border-top:1px solid #C8D1CA;
+  background:#E8ECE8;
+}
+#reader .reader-foot-copy,
+#reader #reader-guide{color:#42564A}
+#reader #reader-page{
+  border-color:#B7C8BC;
+  background:#FFFFFF;
+  color:#214D36;
+}
+#reader .reader-jump,
+#reader .reader-nav{
+  border:1px solid #AEBFB2;
+  background:#FFFFFF;
+  color:#214D36;
+}
+#reader .reader-nav:hover:not(:disabled){
+  border-color:#245D3F;
+  background:#D8E9DD;
+}
+#reader .word{
+  background-image:linear-gradient(#D4EBDD,#D4EBDD);
+}
+#reader .word.selected{
+  background:#F6D8C6;
+  box-shadow:inset 0 -2px 0 #B85F35;
+}
+@media(max-width:700px){
+  #reader #reader-text p{line-height:1.65}
+}
