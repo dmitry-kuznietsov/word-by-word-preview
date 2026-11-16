@@ -2231,3 +2231,163 @@ body{background:var(--bg)}
 @media(max-width:390px){
   #reader #reader-text p{line-height:1.52}
 }
+
+
+/* Contrast refresh — clearer separation between page, sections, cards and actions. */
+:root{
+  --bg:#F1F4F1;
+  --ink:#18251E;
+  --muted:#59675E;
+  --placeholder:#68766D;
+  --line:#D5DED7;
+  --line-2:#BECBC1;
+  --line-3:#8E9E92;
+  --tint-a:#E8EFEA;
+  --tint-b:#F4EDE7;
+  --accent:#276749;
+  --accent-deep:#174A35;
+  --accent-tint:#E1EFE6;
+  --marker:#CBE7D4;
+  --wordmark:#D8E8DC;
+  --second:#B85F35;
+  --second-deep:#874124;
+  --second-tint:#F6E9E0;
+  --second-marker:#F2D2BF;
+  --logo-blue:#276749;
+  --logo-by:#668B72;
+  --logo-overlap:#173F2D;
+  --deco:var(--accent);
+  --deco-deep:var(--accent-deep);
+  --deco-tint:var(--accent-tint);
+}
+body{background:var(--bg);color:var(--ink)}
+.site-header .brand,.site-header .nav,.site-header .menu-toggle{
+  border-color:#CBD6CE;
+  background:rgba(255,255,255,.96);
+}
+.hero{--fill:#F1F4F1}
+.books{--fill:#E6EEE8}
+.reader{--fill:#F3EAE3}
+.plate,.step{border-color:#CDD8D0;background:#FFFFFF}
+.plate-hint{border-color:#D6DED7}
+#library .library-tabs{
+  border-color:#C6D3C9;
+  background:#DDE7E0;
+}
+#library .library-tab{color:#42564A}
+#library .library-tab strong{color:#294A37}
+#library .library-tab span{color:#253B2D}
+#library .library-tab small{color:#596B60}
+#library .library-tab.is-active{
+  border-color:#276749;
+  background:#245B40;
+  box-shadow:0 4px 12px rgba(23,74,53,.18);
+  color:#FFFFFF;
+}
+#library .library-tab.is-active strong,
+#library .library-tab.is-active span,
+#library .library-tab.is-active small{color:#FFFFFF}
+#library .library-tab-panel{
+  border-color:#C7D4CA;
+  background:#F8FAF8;
+}
+#library .library-tab-panel .book{
+  border-color:#CCD8CF;
+  background:#FFFFFF;
+  box-shadow:0 4px 14px rgba(24,49,33,.07);
+}
+#library .library-tab-panel .book-genre{color:#536B5A}
+#library .library-tab-panel .book-level{
+  border-color:#C8D7CC;
+  background:#EDF4EF;
+  color:#315C40;
+}
+#library .library-tab-panel .book-title{color:#182D20}
+#library .library-tab-panel .book-note{color:#59675E}
+#library .library-tab-panel .open{
+  border-color:#D8E1DA;
+  color:#246044;
+}
+#reader .reader-card{
+  border-color:#BCCBBF;
+  background:#FFFFFF;
+  box-shadow:0 18px 44px rgba(25,48,33,.10);
+}
+#reader .reader-head,
+#reader .reader-foot{background:#E8EFEA}
+#reader .story{
+  background:#FFFFFF;
+}
+#reader .chapter{color:#376C4B}
+#reader #reader-title{color:#182D20}
+#reader #reader-text{color:#26382C}
+#reader #reader-text p{color:#26382C}
+#reader .reader-meta b{
+  background:#245B40;
+  color:#FFFFFF;
+}
+#reader .reader-font-controls{
+  border-color:#C5D3C8;
+  background:#FFFFFF;
+}
+#reader .reader-font-controls button{color:#245B40}
+#reader .reader-font-controls button:hover:not(:disabled){background:#DDECE1}
+#reader .reader-time{
+  border-color:#C9D7CD;
+  background:#FFFFFF;
+  color:#405B49;
+}
+#reader .reader-foot{border-color:#C8D5CC}
+#reader .reader-foot-copy{color:#53665A}
+#reader #reader-page{
+  border-color:#B9CCBE;
+  background:#DCEAE0;
+  color:#174A35;
+}
+#reader .reader-jump,
+#reader .reader-nav{
+  border-color:#BFCFC3;
+  background:#FFFFFF;
+  color:#245B40;
+}
+#reader .reader-nav:hover:not(:disabled){
+  border-color:#276749;
+  background:#DDECE1;
+}
+#reader .word{
+  background-image:linear-gradient(#CBE7D4,#CBE7D4);
+}
+#reader .word.selected{
+  background:#F2D2BF;
+  box-shadow:inset 0 -2px 0 #B85F35;
+}
+.translation{
+  border:1px solid #D8B49F;
+  background:#FFFCF9;
+}
+.translation #translation-word{color:#263D2D}
+.translation .translation-result-label{color:#874124}
+.translation #translation-value{
+  border-color:#E8C9B6;
+  border-left-color:#B85F35;
+  background:#F8E9DF;
+  color:#713D25;
+}
+.translation .translation-lemma{
+  border-color:#E5D8CD;
+  background:#F7F1EB;
+  color:#62574D;
+}
+.translation .translation-context{
+  border-color:#E7DDD4;
+  background:#F8F4EF;
+}
+.translation .translation-context p{color:#5F625B}
+.translation .close{
+  border-color:#E2D2C7;
+  background:#F8F0EA;
+  color:#74462F;
+}
+@media(prefers-reduced-motion:reduce){
+  #library .library-tab,#library .library-tab-panel .book{transition:none}
+}
