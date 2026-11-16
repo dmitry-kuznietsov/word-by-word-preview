@@ -612,7 +612,7 @@ async function wbwTranslateSelection(selected){
   card.hidden=false;positionCard(anchor);
   if(selected.text.length>2000)return;
   try{
-    const exactPhrase=String(selected.text).toLocaleLowerCase().replace(/\\s+/g," ").trim().replace(/[.!?]+$/,"");
+    const exactPhrase=String(selected.text).toLocaleLowerCase().replace(/\s+/g," ").trim().replace(/[.!?]+$/,"");
     const knownPhrase=contextualPhrases[exactPhrase];
     const value=knownPhrase||await wbwFetchPhrase(selected.text);
     if(own!==requestId)return;
