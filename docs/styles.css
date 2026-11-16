@@ -1737,3 +1737,97 @@ body{background:var(--bg)}
   #library .library-tab-panel .book,
   #library .library-tab-panel .book-icon{transition:none}
 }
+
+
+/* Modern Editorial — translation card: compact, calm, and easy to scan. */
+.translation{
+  width:min(352px,calc(100vw - 24px));
+  padding:19px 20px 18px;
+  border:1px solid #e3e5da;
+  border-radius:17px;
+  background:#fffefa;
+  color:#293229;
+  box-shadow:0 18px 48px -26px rgba(32,40,32,.34),0 3px 10px rgba(32,40,32,.07);
+  animation:pop .2s ease-out;
+}
+.translation .translation-label{
+  padding-right:34px;
+  color:#858b7e;
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:.075em;
+}
+.translation #translation-word{
+  margin:8px 32px 15px 0;
+  color:#354337;
+  font:600 clamp(18px,1.7vw,21px)/1.32 var(--font-display);
+  letter-spacing:-.025em;
+  overflow-wrap:anywhere;
+}
+.translation .translation-lemma{
+  margin:-8px 0 14px;
+  color:#818879;
+  font:400 12px/1.45 var(--font-display);
+}
+.translation .translation-result-label{
+  margin:0 0 7px;
+  color:#71806d;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.075em;
+}
+.translation #translation-value{
+  padding:12px 14px;
+  border:1px solid #e2e9dc;
+  border-left:3px solid #82977c;
+  border-radius:10px;
+  background:#f4f6f0;
+  color:#354b38;
+  font:600 clamp(19px,1.8vw,22px)/1.42 var(--font-display);
+  text-wrap:pretty;
+  overflow-wrap:anywhere;
+}
+.translation .translation-context{
+  margin-top:13px;
+  padding-top:11px;
+  border-top:1px solid #ecece4;
+}
+.translation .translation-context small{
+  margin-bottom:5px;
+  color:#858b7e;
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:.07em;
+}
+.translation .translation-context p{
+  color:#747b70;
+  font:400 13px/1.55 var(--font-read);
+}
+.translation .close{
+  top:12px;
+  right:12px;
+  width:27px;
+  height:27px;
+  border-color:#e7e8df;
+  background:#f8f8f3;
+  color:#687365;
+  transition:background .18s ease,border-color .18s ease,color .18s ease;
+}
+.translation .close:hover{
+  border-color:#cbd7c5;
+  background:#edf2e9;
+  color:#405b43;
+}
+@media(max-width:560px){
+  .translation{
+    width:min(340px,calc(100vw - 20px));
+    padding:17px 17px 16px;
+    border-radius:15px;
+  }
+  .translation #translation-word{font-size:18px;margin-bottom:13px}
+  .translation #translation-value{padding:11px 12px;font-size:19px}
+}
+@media(prefers-reduced-motion:reduce){
+  .translation{animation:none}
+  .translation .close{transition:none}
+}
