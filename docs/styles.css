@@ -1229,12 +1229,3 @@ main::after{right:var(--rail-x)}
   border-top:2px solid var(--second);
 }
 
-
-/* Level tabs: clean white surfaces without shadows. */
-#library .library-tabs{background:#fff}
-#library .library-tab,
-#library .library-tab:hover,
-#library .library-tab.is-active{
-  background:#fff;
-  box-shadow:none;
-}
