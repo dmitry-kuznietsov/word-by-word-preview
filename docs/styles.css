@@ -1199,3 +1199,32 @@ main::after{right:var(--rail-x)}
   --deco-deep:var(--second-deep);
   --deco-tint:var(--second-tint);
 }
+
+/* Final overrides: remove both reader gradients, and theme the level tabs with the selected second color. */
+#reader .reader-copy{
+  background:var(--second-tint);
+}
+#reader .reader-head{
+  background:#fff;
+}
+#library .library-tab.is-active{
+  background:var(--second-tint);
+  border-color:var(--second);
+  box-shadow:0 3px 12px color-mix(in srgb,var(--second) 13%,transparent),0 1px 2px rgba(11,18,32,.04);
+}
+#library .library-tab.is-active strong{
+  color:var(--second-deep);
+}
+#library .library-tab:hover{
+  background:var(--second-tint);
+}
+#library .library-tab:focus-visible{
+  outline:3px solid var(--second);
+  outline-offset:3px;
+}
+#library .library-tabs{
+  border-color:var(--second-marker);
+}
+#library .library-tab-panel{
+  border-top:2px solid var(--second);
+}
