@@ -975,3 +975,40 @@ main::after{right:var(--rail-x)}
   overscroll-behavior:auto;
   scrollbar-gutter:auto;
 }
+
+
+/* Reader preferences: adjustable text measure and comfortable compact controls. */
+.reader-settings{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.reader-width-controls{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid var(--line-2);border-radius:999px;background:#fff}
+.reader-width-controls button{min-height:30px;padding:0 9px;border:0;border-radius:999px;background:transparent;color:var(--muted);font:500 12px/1 var(--font-display);cursor:pointer}
+.reader-width-controls button[aria-pressed="true"]{background:var(--accent-tint);color:var(--accent-deep)}
+.reader-width-controls button:focus-visible,.reader-font-controls button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.story[data-reader-width="narrow"] #reader-text p{max-width:46ch}
+.story[data-reader-width="normal"] #reader-text p{max-width:62ch}
+.story[data-reader-width="wide"] #reader-text p{max-width:82ch}
+.reader-jump{max-width:min(220px,42vw);min-height:34px;padding:5px 28px 5px 10px;border:1px solid var(--line-2);border-radius:999px;background:#fff;color:var(--ink);font:500 12px/1.3 var(--font-display)}
+.reader-jump[hidden]{display:none}
+.reader-nav[hidden]{display:none}
+@media(max-width:700px){
+  .reader-head{align-items:flex-start;flex-wrap:wrap;gap:10px;padding:14px 16px}
+  .reader-meta{min-height:34px}
+  .reader-tools{width:100%;justify-content:space-between;gap:8px}
+  .reader-settings{justify-content:flex-start;gap:6px}
+  .reader-font-controls{gap:3px}
+  .reader-font-controls button{min-width:32px;height:32px}
+  .reader-font-controls output{min-width:40px}
+  .reader-width-controls button{padding:0 7px;font-size:11px}
+  .reader-time{align-self:center;margin-left:auto}
+  .story{padding:26px 18px 34px}
+  #reader-title{font-size:clamp(27px,8vw,38px)}
+  #reader-text p{font-size:var(--reader-font-size,18px)!important;line-height:1.72}
+  .reader-foot{grid-template-columns:38px minmax(0,1fr) 38px;gap:6px;padding:12px 10px}
+  .reader-nav{width:38px;height:38px}
+  .reader-foot-copy{gap:6px;font-size:12px}
+  .reader-jump{max-width:100%;min-width:0;font-size:11px}
+}
+@media(max-width:390px){
+  .reader-width-controls button{padding:0 5px}
+  .reader-settings{width:100%;justify-content:space-between}
+  .reader-tools{align-items:flex-start;flex-wrap:wrap}
+}
