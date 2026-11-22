@@ -490,7 +490,7 @@ Promise.all([fetch("data/dictionary.json").then(response=>{if(!response.ok)throw
     let wbwLastSelection="";
     let wbwSentenceHoverTimer=null,wbwHoveredSentence=null;
     function positionCard(button){const r=button.getBoundingClientRect(),gap=12,pad=10,width=card.offsetWidth||226,height=card.offsetHeight||96;let left=r.left+r.width/2-width/2;left=Math.max(pad,Math.min(left,innerWidth-width-pad));let top=r.bottom+gap,placement="below";if(top+height>innerHeight-pad){top=Math.max(pad,r.top-height-gap);placement="above"}const tail=Math.max(24,Math.min(width-24,r.left+r.width/2-left));card.dataset.placement=placement;card.style.setProperty("--tail-x",tail+"px");card.style.setProperty("left",left+"px","important");card.style.setProperty("top",top+"px","important")}
-    function closeCard(){clearTimeout(wbwWordHoverTimer);wbwPendingWord=null;if(wbwReadSelection())getSelection()?.removeAllRanges();wbwLastSelection="";if(wbwHoveredSentence)wbwHoveredSentence.classList.remove("is-sentence-hovered");wbwHoveredSentence=null;clearTimeout(wbwSentenceHoverTimer);delete card.dataset.selection;delete card.dataset.hoverSentence;delete card.dataset.hoverWord;delete card.dataset.pinned;requestId++;activeAnchor=null;card.hidden=true;delete card.dataset.word;document.querySelectorAll(".word").forEach(x=>x.classList.remove("selected"))}
+    function closeCard(){if(wbwReadSelection())getSelection()?.removeAllRanges();wbwLastSelection="";if(wbwHoveredSentence)wbwHoveredSentence.classList.remove("is-sentence-hovered");wbwHoveredSentence=null;clearTimeout(wbwSentenceHoverTimer);delete card.dataset.selection;delete card.dataset.hoverSentence;delete card.dataset.hoverWord;delete card.dataset.pinned;requestId++;activeAnchor=null;card.hidden=true;delete card.dataset.word;document.querySelectorAll(".word").forEach(x=>x.classList.remove("selected"))}
     function appendWords(container,text){
       container.replaceChildren();
       const source=String(text??"");
@@ -706,12 +706,10 @@ async function wbwTranslateSelection(selected){
   }
   catch{if(own===requestId){output.textContent="Переклад тимчасово недоступний. Спробуйте ще раз.";positionCard(anchor)}}
 }
-let wbwSelectionTimer,wbwDragging=false,wbwWordHoverTimer,wbwPendingWord=null;
+let wbwSelectionTimer,wbwDragging=false,wbwWordHoverTimer;
 function wbwWordFromPointer(event){
-  // The event target is the most reliable hit-test for an inline word.
-  const target=event.target instanceof Element?event.target.closest(".word"):event.target?.parentElement?.closest(".word");
-  if(target&&event.currentTarget.contains(target))return target;
-  // Caret hit-testing is only a fallback for browsers that report a wrapper.
+  // Prefer the caret hit-test: event.target can be the sentence wrapper
+  // even when the pointer is visually over an inline word span.
   let node=null;
   if(typeof document.caretPositionFromPoint==="function"){
     const position=document.caretPositionFromPoint(event.clientX,event.clientY);
@@ -721,7 +719,9 @@ function wbwWordFromPointer(event){
     if(range)node=range.startContainer;
   }
   const fromCaret=node instanceof Element?node.closest(".word"):node?.parentElement?.closest(".word");
-  return fromCaret&&event.currentTarget.contains(fromCaret)?fromCaret:null;
+  if(fromCaret)return fromCaret;
+  const target=event.target instanceof Element?event.target.closest(".word"):event.target?.parentElement?.closest(".word");
+  return target&&event.currentTarget.contains(target)?target:null;
 }
 function wbwSentenceFromPointer(event){
   // Resolve the actual text node under the pointer. The event target alone is
@@ -769,23 +769,12 @@ for(const readerSurface of [document.getElementById("reader-text"),document.getE
     const word=wbwWordFromPointer(event);
     if(word&&readerSurface.contains(word)){
       wbwClearSentenceHover();
-      if(card.dataset.word===word.dataset.word&&!card.hidden){
-        clearTimeout(wbwWordHoverTimer);wbwPendingWord=null;
-        return;
-      }
-      // pointermove fires continuously while the pointer is stationary over
-      // a word. Do not restart the delay unless the hovered word changes.
-      if(wbwPendingWord!==word){
-        clearTimeout(wbwWordHoverTimer);
-        wbwPendingWord=word;
-        wbwWordHoverTimer=setTimeout(()=>{
-          if(wbwPendingWord===word)wbwPendingWord=null;
-          if(word.isConnected)void translate(word,true);
-        },180);
-      }
+      if(card.dataset.word===word.dataset.word&&!card.hidden)return;
+      clearTimeout(wbwWordHoverTimer);
+      wbwWordHoverTimer=setTimeout(()=>{if(word.isConnected)void translate(word,true)},180);
       return;
     }
-    clearTimeout(wbwWordHoverTimer);wbwPendingWord=null;
+    clearTimeout(wbwWordHoverTimer);
     const sentence=wbwSentenceFromPointer(event);
     if(!sentence){wbwClearSentenceHover();return}
     if(sentence===wbwHoveredSentence||card.dataset.pinned==="true")return;
