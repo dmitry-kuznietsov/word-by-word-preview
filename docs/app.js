@@ -495,7 +495,7 @@ Promise.all([fetch("data/dictionary.json").then(response=>{if(!response.ok)throw
       container.replaceChildren();
       const source=String(text??"");
       const appendTokens=(parent,segment)=>{
-        const token=/[\\p{L}\\p{M}]+(?:['’][\\p{L}\\p{M}]+)*/gu;
+        const token=/[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu;
         let cursor=0,match;
         while((match=token.exec(segment))){
           if(match.index>cursor)parent.append(document.createTextNode(segment.slice(cursor,match.index)));
