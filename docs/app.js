@@ -720,11 +720,13 @@ function wbwSentenceFromPointer(event){
     if(range){node=range.startContainer;offset=range.startOffset}
   }
   if(!node||node.nodeType!==Node.TEXT_NODE)return null;
+  // Word labels are separate interactive spans; never treat their text as a gap.
+  if(node.parentElement?.closest(".word"))return null;
   const sentence=node.parentElement?.closest(".sentence");
   if(!sentence||(!document.getElementById("reader-text")?.contains(sentence)&&!document.getElementById("reader-title")?.contains(sentence)))return null;
   const value=node.nodeValue||"";
   // Only a real whitespace character can activate sentence mode.
-  const candidates=[value[offset-1],value[offset],value[offset+1]];
+  const candidates=[value[offset-1],value[offset]];
   return candidates.some(character=>character&&/\s/.test(character))?sentence:null;
 }
 function wbwClearSentenceHover(){
