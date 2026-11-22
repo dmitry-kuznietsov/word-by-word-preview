@@ -439,6 +439,19 @@ main::after{right:var(--rail-x)}
   .ripple{display:none}
 }
 
+/* Sentence hover: a soft reading highlight, including the spaces between words. */
+#reader-text .sentence,#reader-title .sentence{
+  border-radius:.22em;
+  transition:background-color .16s ease,box-shadow .16s ease;
+}
+#reader-text .sentence.is-sentence-hovered,#reader-title .sentence.is-sentence-hovered{
+  background:rgba(91,166,133,.13);
+  box-shadow:0 0 0 .08em rgba(91,166,133,.13);
+}
+@media (prefers-reduced-motion:reduce){
+  #reader-text .sentence,#reader-title .sentence{transition:none}
+}
+
 /* Native phrase selection, including touch selection handles. */
 #reader-text .word,#reader-title .word{display:inline;-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 .translation[data-selection]{width:min(360px,calc(100vw - 20px));max-height:min(380px,calc(100dvh - 24px));overflow:auto;overflow-wrap:anywhere;overscroll-behavior:contain}
