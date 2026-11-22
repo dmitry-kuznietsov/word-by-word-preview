@@ -707,6 +707,22 @@ async function wbwTranslateSelection(selected){
   catch{if(own===requestId){output.textContent="Переклад тимчасово недоступний. Спробуйте ще раз.";positionCard(anchor)}}
 }
 let wbwSelectionTimer,wbwDragging=false,wbwWordHoverTimer;
+function wbwWordFromPointer(event){
+  // Prefer the caret hit-test: event.target can be the sentence wrapper
+  // even when the pointer is visually over an inline word span.
+  let node=null;
+  if(typeof document.caretPositionFromPoint==="function"){
+    const position=document.caretPositionFromPoint(event.clientX,event.clientY);
+    if(position)node=position.offsetNode;
+  }else if(typeof document.caretRangeFromPoint==="function"){
+    const range=document.caretRangeFromPoint(event.clientX,event.clientY);
+    if(range)node=range.startContainer;
+  }
+  const fromCaret=node instanceof Element?node.closest(".word"):node?.parentElement?.closest(".word");
+  if(fromCaret)return fromCaret;
+  const target=event.target instanceof Element?event.target.closest(".word"):event.target?.parentElement?.closest(".word");
+  return target&&event.currentTarget.contains(target)?target:null;
+}
 function wbwSentenceFromPointer(event){
   // Resolve the actual text node under the pointer. The event target alone is
   // unreliable for inline spans: browsers may report the sentence wrapper
@@ -750,7 +766,7 @@ for(const readerSurface of [document.getElementById("reader-text"),document.getE
   if(!readerSurface)continue;
   readerSurface.addEventListener("pointermove",event=>{
     if(wbwReadSelection())return;
-    const word=event.target instanceof Element?event.target.closest(".word"):null;
+    const word=wbwWordFromPointer(event);
     if(word&&readerSurface.contains(word)){
       wbwClearSentenceHover();
       if(card.dataset.word===word.dataset.word&&!card.hidden)return;
