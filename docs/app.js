@@ -725,6 +725,7 @@ function wbwShowSentence(sentence){
   card.dataset.hoverSentence="true";
   void wbwTranslateSelection({text,range});
 }
+card.addEventListener("pointerleave",()=>{if(card.dataset.hoverSentence==="true")closeCard()});
 for(const readerSurface of [document.getElementById("reader-text"),document.getElementById("reader-title")]){
   if(!readerSurface)continue;
   readerSurface.addEventListener("pointerover",event=>{
@@ -735,7 +736,7 @@ for(const readerSurface of [document.getElementById("reader-text"),document.getE
   });
   readerSurface.addEventListener("pointerout",event=>{
     const sentence=event.target instanceof Element?event.target.closest(".sentence"):null;
-    if(!sentence||sentence.contains(event.relatedTarget))return;
+    if(!sentence||sentence.contains(event.relatedTarget)||(event.relatedTarget instanceof Element&&event.relatedTarget.closest(".translation")))return;
     clearTimeout(wbwSentenceHoverTimer);
     if(wbwHoveredSentence===sentence){
       sentence.classList.remove("is-sentence-hovered");
