@@ -712,20 +712,9 @@ function wbwSentenceFromPointer(event){
   if(!(target instanceof Element))return null;
   const sentence=target.closest(".sentence");
   if(!sentence||(!document.getElementById("reader-text")?.contains(sentence)&&!document.getElementById("reader-title")?.contains(sentence)))return null;
-  // Trigger only when the pointer is over an actual whitespace character,
-  // never when it is over a word (including the word's inline box).
-  let caret=null;
-  if(typeof document.caretRangeFromPoint==="function"){
-    caret=document.caretRangeFromPoint(event.clientX,event.clientY);
-  }else if(typeof document.caretPositionFromPoint==="function"){
-    const position=document.caretPositionFromPoint(event.clientX,event.clientY);
-    if(position){caret=document.createRange();caret.setStart(position.offsetNode,position.offset);caret.collapse(true)}
-  }
-  if(!caret||!sentence.contains(caret.startContainer)||caret.startContainer.nodeType!==Node.TEXT_NODE)return null;
-  const value=caret.startContainer.textContent||"";
-  const offset=caret.startOffset;
-  const char=value.charAt(offset)||value.charAt(offset-1);
-  return /\\s/.test(char)?sentence:null;
+  // A sentence is activated only when the pointer is on the sentence's own
+  // whitespace text area, not on one of its interactive word spans.
+  return target===sentence?sentence:null;
 }
 function wbwShowSentence(sentence){
   if(!sentence||wbwReadSelection())return;
