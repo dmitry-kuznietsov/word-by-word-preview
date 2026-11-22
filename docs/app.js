@@ -708,18 +708,35 @@ async function wbwTranslateSelection(selected){
 }
 let wbwSelectionTimer,wbwDragging=false;
 function wbwSentenceFromPointer(event){
-  const target=event.target;
-  if(!(target instanceof Element))return null;
-  const sentence=target.closest(".sentence");
+  // Resolve the actual text node under the pointer. The event target alone is
+  // unreliable for inline spans: browsers may report the sentence wrapper
+  // while the pointer is visually over a word.
+  let node=null,offset=0;
+  if(typeof document.caretPositionFromPoint==="function"){
+    const position=document.caretPositionFromPoint(event.clientX,event.clientY);
+    if(position){node=position.offsetNode;offset=position.offset}
+  }else if(typeof document.caretRangeFromPoint==="function"){
+    const range=document.caretRangeFromPoint(event.clientX,event.clientY);
+    if(range){node=range.startContainer;offset=range.startOffset}
+  }
+  if(!node||node.nodeType!==Node.TEXT_NODE)return null;
+  const sentence=node.parentElement?.closest(".sentence");
   if(!sentence||(!document.getElementById("reader-text")?.contains(sentence)&&!document.getElementById("reader-title")?.contains(sentence)))return null;
-  // A sentence is activated only when the pointer is on the sentence's own
-  // whitespace text area, not on one of its interactive word spans.
-  return target===sentence?sentence:null;
+  const value=node.nodeValue||"";
+  // Only a real whitespace character can activate sentence mode.
+  const candidates=[value[offset-1],value[offset],value[offset+1]];
+  return candidates.some(character=>character&&/\\s/.test(character))?sentence:null;
+}
+function wbwClearSentenceHover(){
+  clearTimeout(wbwSentenceHoverTimer);
+  if(wbwHoveredSentence)wbwHoveredSentence.classList.remove("is-sentence-hovered");
+  wbwHoveredSentence=null;
+  if(card.dataset.hoverSentence==="true")closeCard();
 }
 function wbwShowSentence(sentence){
   if(!sentence||wbwReadSelection())return;
   const range=document.createRange();range.selectNodeContents(sentence);
-  const text=range.toString().replace(/\\s+/g," ").trim();
+  const text=range.toString().replace(/\s+/g," ").trim();
   if(!text)return;
   wbwHoveredSentence=sentence;
   sentence.classList.add("is-sentence-hovered");
@@ -729,34 +746,20 @@ function wbwShowSentence(sentence){
 card.addEventListener("pointerleave",()=>{if(card.dataset.hoverSentence==="true")closeCard()});
 for(const readerSurface of [document.getElementById("reader-text"),document.getElementById("reader-title")]){
   if(!readerSurface)continue;
-  readerSurface.addEventListener("pointerover",event=>{
+  readerSurface.addEventListener("pointermove",event=>{
+    if(wbwReadSelection())return;
     const sentence=wbwSentenceFromPointer(event);
-    if(!sentence){
-      clearTimeout(wbwSentenceHoverTimer);
-      // Moving from a whitespace gap onto a word must cancel sentence mode.
-      if(wbwHoveredSentence&&event.target instanceof Element&&wbwHoveredSentence.contains(event.target)){
-        wbwHoveredSentence.classList.remove("is-sentence-hovered");
-        wbwHoveredSentence=null;
-        if(card.dataset.hoverSentence==="true")closeCard();
-      }
-      return;
-    }
-    if(sentence===wbwHoveredSentence)return;
+    if(!sentence){wbwClearSentenceHover();return}
+    if(sentence===wbwHoveredSentence||card.dataset.pinned==="true")return;
     clearTimeout(wbwSentenceHoverTimer);
     wbwSentenceHoverTimer=setTimeout(()=>wbwShowSentence(sentence),170);
   });
   readerSurface.addEventListener("pointerout",event=>{
     const sentence=event.target instanceof Element?event.target.closest(".sentence"):null;
     if(!sentence||sentence.contains(event.relatedTarget)||(event.relatedTarget instanceof Element&&event.relatedTarget.closest(".translation")))return;
-    clearTimeout(wbwSentenceHoverTimer);
-    if(wbwHoveredSentence===sentence){
-      sentence.classList.remove("is-sentence-hovered");
-      wbwHoveredSentence=null;
-      if(card.dataset.hoverSentence==="true")closeCard();
-    }
+    if(wbwHoveredSentence===sentence)wbwClearSentenceHover();
   });
 }
-
 function wbwScheduleSelection(){clearTimeout(wbwSelectionTimer);if(wbwDragging)return;wbwSelectionTimer=setTimeout(()=>{const selected=wbwReadSelection();if(selected)void wbwTranslateSelection(selected);else wbwLastSelection=""},250)}
 document.addEventListener("pointerdown",event=>{if(event.target instanceof Element&&event.target.closest("#reader-text,#reader-title")){wbwDragging=true;wbwLastSelection="";requestId++;clearTimeout(wbwSelectionTimer)}});
 for(const name of ["pointerup","pointercancel"])document.addEventListener(name,()=>{wbwDragging=false;wbwScheduleSelection()});
