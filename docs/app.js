@@ -490,7 +490,7 @@ Promise.all([fetch("data/dictionary.json").then(response=>{if(!response.ok)throw
     let wbwLastSelection="";
     let wbwSentenceHoverTimer=null,wbwHoveredSentence=null;
     function positionCard(button){const r=button.getBoundingClientRect(),gap=12,pad=10,width=card.offsetWidth||226,height=card.offsetHeight||96;let left=r.left+r.width/2-width/2;left=Math.max(pad,Math.min(left,innerWidth-width-pad));let top=r.bottom+gap,placement="below";if(top+height>innerHeight-pad){top=Math.max(pad,r.top-height-gap);placement="above"}const tail=Math.max(24,Math.min(width-24,r.left+r.width/2-left));card.dataset.placement=placement;card.style.setProperty("--tail-x",tail+"px");card.style.setProperty("left",left+"px","important");card.style.setProperty("top",top+"px","important")}
-    function closeCard(){if(wbwReadSelection())getSelection()?.removeAllRanges();wbwLastSelection="";if(wbwHoveredSentence)wbwHoveredSentence.classList.remove("is-sentence-hovered");wbwHoveredSentence=null;clearTimeout(wbwSentenceHoverTimer);delete card.dataset.selection;delete card.dataset.hoverSentence;delete card.dataset.pinned;requestId++;activeAnchor=null;card.hidden=true;delete card.dataset.word;document.querySelectorAll(".word").forEach(x=>x.classList.remove("selected"))}
+    function closeCard(){if(wbwReadSelection())getSelection()?.removeAllRanges();wbwLastSelection="";if(wbwHoveredSentence)wbwHoveredSentence.classList.remove("is-sentence-hovered");wbwHoveredSentence=null;clearTimeout(wbwSentenceHoverTimer);delete card.dataset.selection;delete card.dataset.hoverSentence;delete card.dataset.hoverWord;delete card.dataset.pinned;requestId++;activeAnchor=null;card.hidden=true;delete card.dataset.word;document.querySelectorAll(".word").forEach(x=>x.classList.remove("selected"))}
     function appendWords(container,text){
       container.replaceChildren();
       const source=String(text??"");
@@ -689,7 +689,7 @@ async function wbwTranslateSelection(selected){
   document.querySelectorAll(".word.selected").forEach(word=>word.classList.remove("selected"));
   const own=++requestId;
   const anchor={getBoundingClientRect(){const rects=Array.from(selected.range.getClientRects()).filter(r=>r.width&&r.height);return rects[rects.length-1]||selected.range.getBoundingClientRect()}};
-  activeAnchor=anchor;card.dataset.selection="true";card.dataset.word=selected.text;
+  activeAnchor=anchor;delete card.dataset.hoverWord;card.dataset.selection="true";card.dataset.word=selected.text;
   document.getElementById("translation-word").textContent=selected.text;
   const lemmaLine=document.getElementById("translation-lemma");if(lemmaLine)lemmaLine.hidden=true;
   wbwSetTranslationContext(selected.range.startContainer,selected.text,selected.range);
