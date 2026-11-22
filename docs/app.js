@@ -725,7 +725,7 @@ function wbwSentenceFromPointer(event){
   const value=node.nodeValue||"";
   // Only a real whitespace character can activate sentence mode.
   const candidates=[value[offset-1],value[offset],value[offset+1]];
-  return candidates.some(character=>character&&/\\s/.test(character))?sentence:null;
+  return candidates.some(character=>character&&/\s/.test(character))?sentence:null;
 }
 function wbwClearSentenceHover(){
   clearTimeout(wbwSentenceHoverTimer);
