@@ -489,8 +489,39 @@ Promise.all([fetch("data/dictionary.json").then(response=>{if(!response.ok)throw
     async function initDeviceLibrary(){if(!deviceBookGrid&&!bookFileInput)return;try{deviceBooks=await loadDeviceBooks();renderMyBooks();restoreReaderProgress()}catch{setBookStatus("Локальна бібліотека недоступна в цьому браузері.","error")}setupDeviceBookControls()}
     let wbwLastSelection="";
     function positionCard(button){const r=button.getBoundingClientRect(),gap=12,pad=10,width=card.offsetWidth||226,height=card.offsetHeight||96;let left=r.left+r.width/2-width/2;left=Math.max(pad,Math.min(left,innerWidth-width-pad));let top=r.bottom+gap,placement="below";if(top+height>innerHeight-pad){top=Math.max(pad,r.top-height-gap);placement="above"}const tail=Math.max(24,Math.min(width-24,r.left+r.width/2-left));card.dataset.placement=placement;card.style.setProperty("--tail-x",tail+"px");card.style.setProperty("left",left+"px","important");card.style.setProperty("top",top+"px","important")}
-    function closeCard(){if(wbwReadSelection())getSelection()?.removeAllRanges();wbwLastSelection="";delete card.dataset.selection;requestId++;activeAnchor=null;card.hidden=true;delete card.dataset.word;document.querySelectorAll(".word").forEach(x=>x.classList.remove("selected"))}
-    function appendWords(container,text){container.replaceChildren();const source=String(text??"");const token=/[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu;let cursor=0,match;while((match=token.exec(source))){if(match.index>cursor)container.append(document.createTextNode(source.slice(cursor,match.index)));const word=match[0],b=document.createElement("span");b.setAttribute("role","button");b.tabIndex=0;b.onkeydown=event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();translate(b)}};b.className="word";b.textContent=word;b.dataset.word=word;b.onclick=()=>translate(b);b.ondblclick=closeCard;container.append(b);cursor=token.lastIndex}if(cursor<source.length)container.append(document.createTextNode(source.slice(cursor)))}
+    function closeCard(){if(wbwReadSelection())getSelection()?.removeAllRanges();wbwLastSelection="";delete card.dataset.selection;delete card.dataset.hoverSentence;delete card.dataset.pinned;requestId++;activeAnchor=null;card.hidden=true;delete card.dataset.word;document.querySelectorAll(".word").forEach(x=>x.classList.remove("selected"))}
+    function appendWords(container,text){
+      container.replaceChildren();
+      const source=String(text??"");
+      const appendTokens=(parent,segment)=>{
+        const token=/[\\p{L}\\p{M}]+(?:['’][\\p{L}\\p{M}]+)*/gu;
+        let cursor=0,match;
+        while((match=token.exec(segment))){
+          if(match.index>cursor)parent.append(document.createTextNode(segment.slice(cursor,match.index)));
+          const word=match[0],b=document.createElement("span");
+          b.setAttribute("role","button");b.tabIndex=0;
+          b.onkeydown=event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();translate(b)}};
+          b.className="word";b.textContent=word;b.dataset.word=word;
+          b.onclick=()=>translate(b);b.ondblclick=closeCard;
+          parent.append(b);cursor=token.lastIndex;
+        }
+        if(cursor<segment.length)parent.append(document.createTextNode(segment.slice(cursor)));
+      };
+      let parts=[];
+      if(typeof Intl!=="undefined"&&Intl.Segmenter){
+        const segmenter=new Intl.Segmenter("en",{granularity:"sentence"});
+        parts=Array.from(segmenter.segment(source),item=>item.segment);
+      }else{
+        parts=source.match(/[^.!?]+(?:[.!?]+|$)/g)||[source];
+      }
+      parts.forEach(part=>{
+        if(!part)return;
+        const sentence=document.createElement("span");
+        sentence.className="sentence";
+        appendTokens(sentence,part);
+        container.append(sentence);
+      });
+    }
     function getReaderSections(book){if(!book)return[];if(Array.isArray(book.sections)&&book.sections.length)return book.sections;const paragraphs=Array.isArray(book.body)?book.body:[];return[{id:"story",title:String(book.title||""),paragraphs,wordCount:countBookWords(paragraphs.join(" "))}]}
     function updateReaderNavigation(book,index,sections){const isDeviceBook=book&&book.source==="device",storyIndex=isDeviceBook?-1:stories.indexOf(book),hasPrevious=isDeviceBook?index>0:storyIndex>0,hasNext=isDeviceBook?index<sections.length-1:storyIndex>=0&&storyIndex<stories.length-1;if(readerPrev){readerPrev.hidden=false;readerPrev.disabled=!hasPrevious}if(readerNext){readerNext.hidden=false;readerNext.disabled=!hasNext}if(readerPage){readerPage.hidden=false;readerPage.textContent=isDeviceBook?"Частина "+(index+1)+" з "+sections.length:"Оповідання "+(storyIndex+1)+" з "+stories.length}if(readerGuide)readerGuide.hidden=false;const jump=document.getElementById("reader-jump");if(jump){jump.hidden=false;jump.replaceChildren();const options=isDeviceBook?sections.map((item,i)=>({value:String(i),label:item.title||"Частина "+(i+1)})):stories.map((item,i)=>({value:String(i),label:item.title}));options.forEach((item,i)=>{const option=document.createElement("option");option.value=item.value;option.textContent=item.label||"Частина "+(i+1);option.selected=isDeviceBook?i===index:i===storyIndex;jump.append(option)});jump.setAttribute("aria-label",isDeviceBook?"Перейти до частини":"Перейти до оповідання")}}
     const READER_PROGRESS_KEY="word-by-word-reader-progress";
@@ -568,7 +599,7 @@ Promise.all([fetch("data/dictionary.json").then(response=>{if(!response.ok)throw
     function contextualTranslation(button){const parent=button.parentElement;if(!parent)return null;const words=Array.from(parent.querySelectorAll(".word")),index=words.indexOf(button);if(index<0)return null;const cleanRange=(from,to)=>{const range=document.createRange();range.setStartAfter(from);range.setEndBefore(to);return range.toString()};const candidates=[];for(let start=Math.max(0,index-2);start<=index;start++){for(let end=index;end<=Math.min(words.length-1,index+2);end++){if(end-start<1)continue;let separated=false;for(let j=start;j<end;j++){if(/[.!?;:\n]/.test(cleanRange(words[j],words[j+1]))){separated=true;break}}if(separated)continue;const phrase=words.slice(start,end+1).map(item=>item.dataset.word.toLowerCase()).join(" ");if(contextualPhrases[phrase])candidates.push({phrase,translation:contextualPhrases[phrase],length:end-start})}}candidates.sort((a,b)=>b.length-a.length);return candidates.length?candidates[0]:null}
     const cleanMachineTranslation=(value,word)=>{const cleaned=String(value||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim(),containsSource=cleaned.toLocaleLowerCase().split(/[^A-Za-z'’-]+/).includes(word.toLocaleLowerCase()),hasUkrainian=/[А-Яа-яІіЇїЄєҐґ]/.test(cleaned);return!cleaned||!hasUkrainian||cleaned.toLocaleLowerCase()===word.toLocaleLowerCase()||containsSource?null:cleaned};
     async function translate(button){if(wbwReadSelection())return;delete card.dataset.selection;const word=button.dataset.word;if(!card.hidden&&card.dataset.word===word){closeCard();return}document.querySelectorAll(".word").forEach(x=>x.classList.remove("selected"));button.classList.add("selected");activeAnchor=button;card.dataset.word=word;document.getElementById("translation-word").textContent=word;const lemma=wordLemma(word),lemmaLine=document.getElementById("translation-lemma");if(lemmaLine){lemmaLine.textContent=lemma?"Початкова форма: "+lemma:"";lemmaLine.hidden=!lemma}wbwSetTranslationContext(button,word);document.getElementById("translation-value").textContent="Перекладаємо…";card.hidden=false;positionCard(button);const own=++requestId;const contextTranslation=contextualTranslation(button);if(contextTranslation){document.getElementById("translation-word").textContent=contextTranslation.phrase;const lemmaLine=document.getElementById("translation-lemma");if(lemmaLine)lemmaLine.hidden=true;document.getElementById("translation-value").textContent=contextTranslation.translation;positionCard(button);return}const localTranslation=dictionaryTranslation(word);if(localTranslation){document.getElementById("translation-value").textContent=localTranslation;positionCard(button);return}try{const response=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(word)+"&langpair=en|uk");const data=await response.json();if(own!==requestId)return;const matches=(data.matches||[]).map(x=>({value:x.translation,quality:Number(x.quality||x.match||0)})).filter(x=>x.value).sort((a,b)=>b.quality-a.quality);const rawValue=matches[0]?.quality>=70?matches[0].value:data.responseData?.translatedText;const value=cleanMachineTranslation(rawValue,word);if(!value)throw Error();document.getElementById("translation-value").textContent=value;positionCard(button)}catch{if(own===requestId){document.getElementById("translation-value").textContent="Переклад тимчасово недоступний";positionCard(button)}}}
-    const menuToggle=document.getElementById("menu-toggle"),mobileMenu=document.getElementById("mobile-menu"),syncCard=()=>{if(!activeAnchor||card.hidden)return;const r=activeAnchor.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight){closeCard();return}positionCard(activeAnchor)};menuToggle.onclick=()=>{const open=menuToggle.getAttribute("aria-expanded")!=="true";menuToggle.setAttribute("aria-expanded",String(open));mobileMenu.hidden=!open};mobileMenu.querySelectorAll("a").forEach(link=>link.onclick=()=>{mobileMenu.hidden=true;menuToggle.setAttribute("aria-expanded","false")});document.querySelector(".close").onclick=closeCard;document.addEventListener("click",event=>{const target=event.target;if(target instanceof Element&&!target.closest(".word")&&!target.closest(".translation")&&!wbwReadSelection())closeCard()});addEventListener("scroll",syncCard,{passive:true});addEventListener("resize",syncCard);const placeholderButton=document.getElementById("placeholder-button"),placeholderMessage=document.getElementById("placeholder-message");if(placeholderButton&&placeholderMessage)placeholderButton.onclick=()=>placeholderMessage.classList.add("show");const plateTitle=document.getElementById("plate-title"),plateText=document.getElementById("plate-text");if(plateTitle)appendWords(plateTitle,plateTitle.textContent);if(plateText)appendWords(plateText,plateText.textContent);renderBooks();initDictionaryBrowser();const libraryMedia=matchMedia("(max-width:900px)");libraryMedia.addEventListener("change",renderBooks);showStory(0,false,false);void initDeviceLibrary();
+    const menuToggle=document.getElementById("menu-toggle"),mobileMenu=document.getElementById("mobile-menu"),syncCard=()=>{if(!activeAnchor||card.hidden)return;const r=activeAnchor.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight){closeCard();return}positionCard(activeAnchor)};menuToggle.onclick=()=>{const open=menuToggle.getAttribute("aria-expanded")!=="true";menuToggle.setAttribute("aria-expanded",String(open));mobileMenu.hidden=!open};mobileMenu.querySelectorAll("a").forEach(link=>link.onclick=()=>{mobileMenu.hidden=true;menuToggle.setAttribute("aria-expanded","false")});document.querySelector(".close").onclick=closeCard;document.addEventListener("click",event=>{const target=event.target;if(target instanceof Element&&target.closest(".sentence")&&card.dataset.hoverSentence==="true"){delete card.dataset.hoverSentence;card.dataset.pinned="true";return}if(target instanceof Element&&!target.closest(".word")&&!target.closest(".translation")&&!wbwReadSelection())closeCard()});addEventListener("scroll",syncCard,{passive:true});addEventListener("resize",syncCard);const placeholderButton=document.getElementById("placeholder-button"),placeholderMessage=document.getElementById("placeholder-message");if(placeholderButton&&placeholderMessage)placeholderButton.onclick=()=>placeholderMessage.classList.add("show");const plateTitle=document.getElementById("plate-title"),plateText=document.getElementById("plate-text");if(plateTitle)appendWords(plateTitle,plateTitle.textContent);if(plateText)appendWords(plateText,plateText.textContent);renderBooks();initDictionaryBrowser();const libraryMedia=matchMedia("(max-width:900px)");libraryMedia.addEventListener("change",renderBooks);showStory(0,false,false);void initDeviceLibrary();
     document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener("click",event=>{const targetId=link.getAttribute("href")?.slice(1),section=targetId&&document.getElementById(targetId);if(!section)return;event.preventDefault();section.scrollIntoView({behavior:"smooth",block:"start"});history.replaceState(null,"",location.pathname+location.search)}));
     document.addEventListener("click",event=>{const nextButton=event.target instanceof Element?event.target.closest("#reader-next"):null;if(!(nextButton instanceof HTMLButtonElement)||nextButton.disabled)return;requestAnimationFrame(()=>{if(readerText&&typeof readerText.animate==="function"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)readerText.animate([{opacity:.38,transform:"translateY(8px)"},{opacity:1,transform:"translateY(0)"}],{duration:360,easing:"cubic-bezier(.22,.8,.25,1)"});const reader=document.getElementById("reader");if(reader)reader.scrollIntoView({behavior:"smooth",block:"start"})})});
 
@@ -675,6 +706,45 @@ async function wbwTranslateSelection(selected){
   catch{if(own===requestId){output.textContent="Переклад тимчасово недоступний. Спробуйте ще раз.";positionCard(anchor)}}
 }
 let wbwSelectionTimer,wbwDragging=false;
+let wbwSentenceHoverTimer=null,wbwHoveredSentence=null;
+function wbwSentenceFromPointer(event){
+  const target=event.target;
+  if(!(target instanceof Element))return null;
+  const sentence=target.closest(".sentence");
+  if(!sentence||(!document.getElementById("reader-text")?.contains(sentence)&&!document.getElementById("reader-title")?.contains(sentence)))return null;
+  // Only whitespace between words triggers sentence translation; word clicks remain unchanged.
+  return target===sentence?sentence:null;
+}
+function wbwShowSentence(sentence){
+  if(!sentence||wbwReadSelection())return;
+  const range=document.createRange();range.selectNodeContents(sentence);
+  const text=range.toString().replace(/\\s+/g," ").trim();
+  if(!text)return;
+  wbwHoveredSentence=sentence;
+  sentence.classList.add("is-sentence-hovered");
+  card.dataset.hoverSentence="true";
+  void wbwTranslateSelection({text,range});
+}
+for(const readerSurface of [document.getElementById("reader-text"),document.getElementById("reader-title")]){
+  if(!readerSurface)continue;
+  readerSurface.addEventListener("pointerover",event=>{
+    const sentence=wbwSentenceFromPointer(event);
+    if(!sentence||sentence===wbwHoveredSentence)return;
+    clearTimeout(wbwSentenceHoverTimer);
+    wbwSentenceHoverTimer=setTimeout(()=>wbwShowSentence(sentence),170);
+  });
+  readerSurface.addEventListener("pointerout",event=>{
+    const sentence=event.target instanceof Element?event.target.closest(".sentence"):null;
+    if(!sentence||sentence.contains(event.relatedTarget))return;
+    clearTimeout(wbwSentenceHoverTimer);
+    if(wbwHoveredSentence===sentence){
+      sentence.classList.remove("is-sentence-hovered");
+      wbwHoveredSentence=null;
+      if(card.dataset.hoverSentence==="true")closeCard();
+    }
+  });
+}
+
 function wbwScheduleSelection(){clearTimeout(wbwSelectionTimer);if(wbwDragging)return;wbwSelectionTimer=setTimeout(()=>{const selected=wbwReadSelection();if(selected)void wbwTranslateSelection(selected);else wbwLastSelection=""},250)}
 document.addEventListener("pointerdown",event=>{if(event.target instanceof Element&&event.target.closest("#reader-text,#reader-title")){wbwDragging=true;wbwLastSelection="";requestId++;clearTimeout(wbwSelectionTimer)}});
 for(const name of ["pointerup","pointercancel"])document.addEventListener(name,()=>{wbwDragging=false;wbwScheduleSelection()});
