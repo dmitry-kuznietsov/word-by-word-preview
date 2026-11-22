@@ -742,7 +742,17 @@ for(const readerSurface of [document.getElementById("reader-text"),document.getE
   if(!readerSurface)continue;
   readerSurface.addEventListener("pointerover",event=>{
     const sentence=wbwSentenceFromPointer(event);
-    if(!sentence||sentence===wbwHoveredSentence)return;
+    if(!sentence){
+      clearTimeout(wbwSentenceHoverTimer);
+      // Moving from a whitespace gap onto a word must cancel sentence mode.
+      if(wbwHoveredSentence&&event.target instanceof Element&&wbwHoveredSentence.contains(event.target)){
+        wbwHoveredSentence.classList.remove("is-sentence-hovered");
+        wbwHoveredSentence=null;
+        if(card.dataset.hoverSentence==="true")closeCard();
+      }
+      return;
+    }
+    if(sentence===wbwHoveredSentence)return;
     clearTimeout(wbwSentenceHoverTimer);
     wbwSentenceHoverTimer=setTimeout(()=>wbwShowSentence(sentence),170);
   });
