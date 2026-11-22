@@ -445,8 +445,8 @@ main::after{right:var(--rail-x)}
   transition:background-color .16s ease,box-shadow .16s ease;
 }
 #reader-text .sentence.is-sentence-hovered,#reader-title .sentence.is-sentence-hovered{
-  background:rgba(91,166,133,.13);
-  box-shadow:0 0 0 .08em rgba(91,166,133,.13);
+  background:var(--second-tint);
+  box-shadow:0 0 0 .08em var(--second-tint);
 }
 @media (prefers-reduced-motion:reduce){
   #reader-text .sentence,#reader-title .sentence{transition:none}
